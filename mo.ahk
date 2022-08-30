@@ -72,6 +72,9 @@ if WinExist("Ahk_exe RobloxPlayerBeta.exe") { ;; find roblox
 Gui, -Caption
 Gui, +AlwaysOnTop
 Gui, Add, Text, x30 y8, Vivace's Macro
+
+
+
 ;; - - - treadmill
 Gui, Add, Picture, w20 h20 x5 y5, %A_WorkingDir%/resource-main/bin/ico.ico
 ;; group picture 
@@ -168,7 +171,7 @@ Gui, Show , h300 w700, Vivace's Macro
 
 WinSet, Region, 0-0 h300 w700 R15-15,Vivace's Macro
 
-Return 
+Return
 
 test:
     GuiControl, Show, Button
@@ -258,9 +261,24 @@ StartTread:
     IniWrite, %TASR%, settings.ini, AdvTreadmill, TASR
     IniWrite, %TAAC%, settings.ini, AdvTreadmill, TAAC
     IniWrite, %TAAL%, settings.ini, AdvTreadmill, TAAL
-    TreadmillWeight = True
-    If (TASS = 1)
-    {
+    Eatingtype = 1
+    If (TAAC = 1) {
+        IniRead, KeyCombo, settings, Record, RECKEY
+        IniRead, List, settings, Record, RECTYPE
+        if (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
+            Gui, Add, Text, y10,Record Key:
+            Gui, Add, Edit, ym vKeyCombo hwndEC2
+            Gui, Add, Button, ym gSaveRec, Done
+            Gui, Add, Text, xm,Record Type:
+            Gui, Add, DDL, +Theme x79 y30 vList, Record|ShadowPlay
+            SHKB_hwndList = %EC1%,%EC2%,%EC4% 
+            SHKB_CatcherGuiNum = 2:
+            SHKB_init("SHKB_Catcher")
+            Gui, Show,, Vivace's Macro
+        }
+    }
+
+    If (TASS = 1) {
         InputBox, TASSV, Vivace's Macro, You have Set Start Delay Enabled `nPlease Enter InputBox *only number *Default value is 0,, 300, 150
         If ErrorLevel = 1
         {
@@ -278,8 +296,7 @@ StartTread:
     } else {
         TASSV = 0
     }
-    If (TASR = 1)
-    {
+    If (TASR = 1) {
         InputBox, TASRV, Vivace's Macro, You have Set Rest Delay Enabled `nPlease Enter InputBox *only number *Default value is 9000,, 300, 150
         If ErrorLevel = 1
         {
@@ -300,7 +317,16 @@ StartTread:
 
 Return
 
-
+SaveRec:
+    Gui, Submit, Destroy
+    If (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR")
+    {
+        msgbox,,Vivace's Macro,You have incomplete information.
+        ExitApp
+    }
+    IniWrite, %List%, settings.ini, Record, RECTYPE
+    IniWrite, %KeyCombo%, settings.ini, Record, RECKEY
+Return
 
 
 
@@ -313,6 +339,120 @@ ExitApp
 
 
 ;; function
+
+
+;--------------------	 FUNCTIONS   ---------------
+SHKB_ModKeyState(WinLR = false,CtrlLR = false,ShiftLR = false,AltLR = false) ;change false to true for seperate Left and Right hotkeys for that key
+{  
+if (! WinLR and (GetKeyState("LWin","P") or GetKeyState("RWin","P")))
+      String .= "Win + "
+if (! CtrlLR and (GetKeyState("LCtrl","P") or GetKeyState("RCtrl","P")))
+      String .= "Ctrl + "
+if (! ShiftLR and (GetKeyState("LShift","P") or GetKeyState("RShift","P")))
+      String .= "Shift + "
+if (!AltLR and (GetKeyState("LAlt","P") or GetKeyState("RAlt","P")))
+      String .= "Alt + "
+if ( WinLR and (GetKeyState("LWin","P")))
+        String .= "LWin + "
+if ( WinLR and (GetKeyState("RWin","P")))
+        String .= "RWin + "
+if ( CtrlLR and (GetKeyState("LCtrl","P")))
+        String .= "LCtrl + "
+if ( CtrlLR and (GetKeyState("RCtrl","P")))
+        String .= "RCtrl + "
+if ( ShiftLR and (GetKeyState("LShift","P")))
+        String .= "LShift + "
+if ( ShiftLR and (GetKeyState("RShift","P")))
+        String .= "RShift + "
+if ( AltLR and (GetKeyState("LAlt","P")))
+        String .= "LAlt + "
+if ( AltLR and (GetKeyState("RAlt","P")))
+        String .= "RAlt + "        
+return String
+}
+
+SHKB_ENFocus( wp, lp )
+{
+  Global SHKB_hwndList, SHKB_LastFocused, SHKB_Catcher, SHKB_CatcherGuiNum
+  SetFormat,integerfast,H    
+if lp not in %SHKB_hwndList%
+      {
+        SHKB_LastFocused := lp
+        SetFormat,integerfast,D
+        return
+      }
+  SetFormat,integerfast,D
+  If ( (wp >> 16) = 0x100 and ( lp != SHKB_LastFocused) ) ; gain focus
+      {   
+        gui, %SHKB_CatcherGuiNum% -caption +AlwaysOnTop
+        gui,  %SHKB_CatcherGuiNum% show, NoActivate  w200 h200, %SHKB_Catcher%
+        winset,transparent, 0,%SHKB_Catcher%
+      }
+  If ( (wp >> 16) = 0x200  ) ;lose focus
+    Gui, 2: Destroy
+  SHKB_LastFocused := lp
+}
+
+SHKB_init(WinTitle)
+{
+Global SHKB_Catcher := WinTitle
+OnMessage( 0x111, "SHKB_ENFocus" ) ;Setup Catcher window loading on control focus
+HKlist = ``|-|=|[|]|`\|`;|`'|`,|`.|`/ ; Characters
+HKlist .= "|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z" ;letters
+HKlist .= "|1|2|3|4|5|6|7|8|9|0" ; numbers
+HKlist .= "|Down|Up|Left|Right|Home|End|PgUp|PgDn|Delete|Insert|PrintScreen|Pause|CtrlBreak|Space|Tab|Esc" ;Additional
+HKlist .= "|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12" ;F keys
+HKlist .= "|Numpad0|Numpad1|Numpad2|Numpad3|Numpad4|Numpad5|Numpad6|Numpad7|Numpad8|Numpad9|NumpadDot" ;Numlock on keys
+HKlist .= "|NumpadIns|NumpadEnd|NumpadDown|NumpadPgDn|NumpadLeft|NumpadClear|NumpadRight|NumpadHome|NumpadUp|NumpadPgUp|NumpadDel" ; numlock off keys
+HKlist .= "|NumpadDiv|NumpadMult|NumpadAdd|NumpadSub|NumpadEnter" ; numpad math functions
+HKlist .= "|Backspace|Enter"  ; I wouldn't use these as hotkeys if I were you...
+HKModList := "LCtrl|RCtrl|LShift|RShift|RAlt|LAlt|LWin|Rwin"
+HKModList2 := "LCtrl up|RCtrl up|LShift up|RShift up|RAlt up|LAlt up|LWin up|Rwin up"
+hotkey,IfWinExist, %SHKB_Catcher%
+loop,parse,HKlist,|
+	hotkey,%A_LoopField%,SHKB_label
+loop,parse,HKModList,|
+	hotkey,%A_LoopField%,SHKB_label2
+loop,parse,HKModList2,|
+	hotkey,%A_LoopField%,SHKB_label3
+hotkey,IfWinExist
+}
+
+SHKB_GetHotkey(hwnd) 
+{
+  local list,array0,array1,array2
+   static keys = "<#:LWin + |>#:RWin + |<^:LCtrl + |>^:RCtrl + |<+:LShift + |>+:RShift + |<!:LAlt + |>!:RAlt + |#:Win + |^:Ctrl + |+:Shift + |!:Alt + "
+   list := SHKB_KeyList%hwnd%
+   Loop, Parse, keys, |
+   {
+      StringSplit, Array, A_LoopField, :
+      StringReplace, list, list, %Array2%, %Array1%, All
+   }
+   StringReplace, list, list,None
+   Return list
+}
+
+;--------------------	 LABLES     ---------------
+SHKB_label3:
+if SHKB_Lock
+    return    
+SHKB_label2:
+SHKB_Lock = 0
+SHKB_label:
+if A_ThisLabel = SHKB_label
+  SHKB_Key%SHKB_LastFocused%:= A_ThisHotkey
+else
+  SHKB_Key%SHKB_LastFocused%:= 
+SHKB_ModKey%SHKB_LastFocused% := SHKB_ModKeyState()
+SHKB_KeyList%SHKB_LastFocused% := SHKB_ModKey%SHKB_LastFocused% . SHKB_Key%SHKB_LastFocused%
+if (SHKB_KeyList%SHKB_LastFocused% ="")
+  SHKB_KeyList%SHKB_LastFocused% := "None"
+ControlSetText,,% SHKB_KeyList%SHKB_LastFocused%,ahk_id %SHKB_LastFocused%  
+if (SHKB_ModKey%SHKB_LastFocused% AND SHKB_Key%SHKB_LastFocused% !="" AND A_ThisLabel = "SHKB_label" )
+  SHKB_Lock = 1
+return
+
+
 Unz(sZip, sUnz)	{
 	FileCreateDir, %sUnz%
     psh  := ComObjCreate("Shell.Application")
