@@ -59,7 +59,7 @@ Gui, Add, Picture, gtest w32 h32 x10 y110 , ss.png
 
 Gui, Add, GroupBox,  x50 y30 w630 h250 vTreadmillTab, Treadmill's Option
 
-GuiControl, Hide, TreadmillTab
+GuiControl, Hide, TreadmillTab 
 
 
 Gui, Show , h300 w700, Vivace's Macro
