@@ -1,1 +1,2 @@
-# mighty-v2
+# Rework Mighty Omega Macro
+Hi
