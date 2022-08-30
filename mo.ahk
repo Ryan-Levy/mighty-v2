@@ -64,7 +64,7 @@ GuiControl, Hide, TreadmillTab
 
 Gui, Show , h300 w700, Vivace's Macro
 
-WinSet, Region, 0-0 h300 w700 R15-15,Vivace's Macro 
+WinSet, Region, 0-0 h300 w700 R15-15,Vivace's Macro
 
 
 Return 
