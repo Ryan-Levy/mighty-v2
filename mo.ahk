@@ -86,7 +86,25 @@ IniRead, TASR, settings.ini, AdvTreadmill, TASR
 IniRead, TAAC, settings.ini, AdvTreadmill, TAAC
 IniRead, TAAL, settings.ini, AdvTreadmill, TAAL
 
+;;Weight
+; WL = Weight Level
+; WE = Weight Eat Option
+; WD = Weight Duration Options
+; WA = Weight Stamina Amount 
+IniRead, WL, settings.ini, Weight, WL
+IniRead, WE, settings.ini, Weight, WE
+IniRead, WD, settings.ini, Weight, WD
+IniRead, WA, settings.ini, Weight, WA
 
+;; AdvWeight
+; WASD = Stamina Detection
+; WASR = Set Rest Delay
+; WAAC = Auto Clip
+; WAAL = Auto Leave
+IniRead, WASD, settings.ini, AdvWeight, WASD
+IniRead, WASR, settings.ini, AdvWeight, WASR
+IniRead, WAAC, settings.ini, AdvWeight, WAAC
+IniRead, WAAL, settings.ini, AdvWeight, WAAL
 
 If (A_ScreenDPI != 96) { ;; checking scale and layout
     MsgBox,	16,Vivace's Macro, Your Scale `& layout settings need to be on 100`%
@@ -162,12 +180,50 @@ Gui, Add, Checkbox, vTAAC ,Auto Clip
 Gui, Add, Checkbox, vTAAL ,Auto Leave 
 
 Gui, Add, Button,xm+321 ym+240 vbutton gStartTread ,Done ;; start button
+
 ;; - - - end treadmill gui
+Gui, Add, GroupBox,  x50 y30 w630 h250 vWeightTab, Weight Machine's Option
+
+Gui, Add, Text, xm+55 ym+50 vvtext1,Which Level?
+Gui, Add, DropDownList, vWL,Auto|6|5|4|3|2|1
+Gui, Add, Text, vvtext2,Auto Eat Options`,Protein on slot 1
+Gui, Add, DropDownList, vWE ,None|Food|Protein|Food+Protein
+
+Gui, Add, Text,xm+250 ym+50 vvtext3,Duration Options?
+Gui, Add, DropDownList, vWD,Macro Indefinitely|Fatigue estimate
+Gui, Add, Text, vvtext4,What's Your Stamina Amount?
+Gui, Add, DropDownList, vWA ,High|Medium|Low
+
+Gui, Add, Text,xm+445 ym+50 vvtext5,Advance Options
+Gui, Add, Checkbox, vWASD ,Stamina Detection
+Gui, Add, Checkbox, vWASR ,Set Rest Delay
+Gui, Add, Checkbox, vWAAC ,Auto Clip 
+Gui, Add, Checkbox, vWAAL ,Auto Leave 
+
+Gui, Add, Button,xm+321 ym+240 v2button gStartWeight ,Done ;; start button
 
 
 ;; load option on settings.ini
 
 
+
+
+
+GuiControl, Hide, 2Button
+GuiControl, Hide, WeightTab
+GuiControl, Hide, vtext1
+GuiControl, Hide, vtext2
+GuiControl, Hide, vtext3
+GuiControl, Hide, vtext4
+GuiControl, Hide, vtext5
+GuiControl, Hide, WL
+GuiControl, Hide, WE
+GuiControl, Hide, WD
+GuiControl, Hide, WA
+GuiControl, Hide, WASD
+GuiControl, Hide, WASR
+GuiControl, Hide, WAAC
+GuiControl, Hide, WAAL
 ;;
 GuiControl, Hide, Button
 GuiControl, Hide, TreadmillTab 
@@ -188,11 +244,31 @@ GuiControl, Hide, TASR
 GuiControl, Hide, TAAC
 GuiControl, Hide, TAAL
 
+;; load saved ddl
 GuiControl, Choose, TS, %TS%
 GuiControl, Choose, TL, %TL%
 GuiControl, Choose, TE, %TE%
 GuiControl, Choose, TD, %TD%
 GuiControl, Choose, TA, %TA%
+
+GuiControl, Choose, WL, %WL%
+GuiControl, Choose, WE, %WE%
+GuiControl, Choose, WD, %WD%
+GuiControl, Choose, WA, %WA%
+
+If (WASD = "ERROR") {
+    WASD = 0
+}
+If (WASR = "ERROR") {
+    WASR = 0
+}
+If (WAAC = "ERROR") {
+    WAAC = 0
+} 
+If (WAAL = "ERROR") {
+    WAAL = 0
+}
+
 If (TASD = "ERROR") {
     TASD = 0
 }
@@ -210,12 +286,20 @@ IF (TAAL = "ERROR") {
     TAAL = 0
 }
     
+;; adv control
+
 
 GuiControl,, TASD, %TASD%
 GuiControl,, TASS, %TASS%
 GuiControl,, TASR, %TASR%
 GuiControl,, TAAC, %TAAC%
 GuiControl,, TAAL, %TAAL%
+
+GuiControl,, WASD, %WASD%
+GuiControl,, WASR, %WASR%
+GuiControl,, WAAC, %WAAC%
+GuiControl,, WAAL, %WAAL%
+
 
 Gui, Show , h300 w700, Vivace's Macro
 
@@ -224,6 +308,7 @@ WinSet, Region, 0-0 h300 w700 R15-15,Vivace's Macro
 Return
 
 test:
+
     GuiControl, Show, Button
     GuiControl, Show, TreadmillTab 
     GuiControl, Show, TS
@@ -242,6 +327,22 @@ test:
     GuiControl, Show, TASR
     GuiControl, Show, TAAC
     GuiControl, Show, TAAL
+
+    GuiControl, Hide, 2Button
+    GuiControl, Hide, WeightTab
+    GuiControl, Hide, vtext1
+    GuiControl, Hide, vtext2
+    GuiControl, Hide, vtext3
+    GuiControl, Hide, vtext4
+    GuiControl, Hide, vtext5
+    GuiControl, Hide, WL
+    GuiControl, Hide, WE
+    GuiControl, Hide, WD
+    GuiControl, Hide, WA
+    GuiControl, Hide, WASD
+    GuiControl, Hide, WASR
+    GuiControl, Hide, WAAC
+    GuiControl, Hide, WAAL
 Return
 test2:
     GuiControl, Hide, Button
@@ -262,6 +363,22 @@ test2:
     GuiControl, Hide, TASR
     GuiControl, Hide, TAAC
     GuiControl, Hide, TAAL
+
+    GuiControl, Show, 2Button
+    GuiControl, Show, WeightTab
+    GuiControl, Show, vtext1
+    GuiControl, Show, vtext2
+    GuiControl, Show, vtext3
+    GuiControl, Show, vtext4
+    GuiControl, Show, vtext5
+    GuiControl, Show, WL
+    GuiControl, Show, WE
+    GuiControl, Show, WD
+    GuiControl, Show, WA
+    GuiControl, Show, WASD
+    GuiControl, Show, WASR
+    GuiControl, Show, WAAC
+    GuiControl, Show, WAAL
 Return
 
 Minimize:
@@ -296,7 +413,18 @@ TrainStamina:
 LoseFat:
 
 LoseMuscle:
-
+StartWeight:
+    Gui, Submit
+    Gui, Destroy
+    IniWrite, %WL%, settings.ini, Weight, WL
+    IniWrite, %WE%, settings.ini, Weight, WE
+    IniWrite, %WD%, settings.ini, Weight, WD
+    IniWrite, %WA%, settings.ini, Weight, WA
+    IniWrite, %WASD%, settings.ini, AdvWeight, WASD
+    IniWrite, %WASR%, settings.ini, AdvWeight, WASR
+    IniWrite, %WAAC%, settings.ini, AdvWeight, WAAC
+    IniWrite, %WAAL%, settings.ini, AdvWeight, WAAL
+Return
 StartTread:
     ;MsgBox, ALOALAOALO
     Gui, Submit
