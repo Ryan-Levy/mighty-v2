@@ -13,6 +13,55 @@ CoordMode, Mouse, Window
 OnMessage(0x201, "WM_LBUTTONDOWN")
 ;;
 
+IniRead, Webhook, settings.ini, Notifications, Webhook
+IniRead, UserID, settings.ini, Notifications, UserID
+if ((Webhook = "ERROR") or (UserID = "ERROR") or (UserID = "<@>") or (Webhook = "") or (UserID = "")) {
+    Gui, Add, Text, y10,Webhook:  
+    Gui, Add, Edit,  ym vWebhook ,
+    Gui, Add, Button, ym gc, Done
+    Gui, Add, Text, xm,UserID:
+    Gui, Add, Edit,  x70 y30 vUserID, 
+    Gui, Show,, Vivace's Macro
+} else {
+    goto, b
+}
+
+;; webhook gui required
+
+Return
+c:
+    Gui, Submit
+    Gui, Destroy
+    test:=GetUrlStatus(Webhook, 10)		; 200
+    If (test = "") {
+        MsgBox, 16, Vivace's Macro, Invalid link
+        ExitApp
+    } else {
+        req := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+        req.Open("POST", Webhook, true)
+        req.SetRequestHeader("Content-Type", "application/json")
+        firsttimechecking=
+        (
+            {
+                "username": "i love vivace's macro",
+                "content": "<@%UserID%> test"
+            }
+        )
+        req.Send(firsttimechecking)
+        Msgbox, 4, Vivace's Macro, Did you receive the ping?
+        IfMsgBox no
+        {
+            Reload
+            ExitApp
+        }
+        IniWrite, %Webhook%, settings.ini, Notifications, Webhook
+    }
+    IniWrite, <@%UserID%>, settings.ini, Notifications, UserID
+    goto, b
+return
+b:
+;;
+
 ;;Treadmill
 ; TS  = Treadmill Training
 ; TL = Treadmill Level
@@ -52,6 +101,7 @@ if !FileExist("resource-main") { ;download image resource
     Unz(myzip, unzipfolder) ;auto extract file function
     FileDelete, resource.zip ; delete zip file
     Tooltip
+    MsgBox, Downloaded 
 }
 
 if WinExist("Ahk_exe RobloxPlayerBeta.exe") { ;; find roblox
@@ -276,7 +326,7 @@ StartTread:
     }
 
     If (TASS = 1) {
-        InputBox, TASSV, Vivace's Macro, You have Set Start Delay Enabled `nPlease Enter InputBox *only number *Default value is 0,, 300, 150
+        InputBox, TASSV, Vivace's Macro, You have Set Start Delay Enabled `nPlease Enter InputBox *only number *Default value is 0,, 400, 150
         If ErrorLevel = 1
         {
             msgbox,,Vivace's Macro,You have incomplete information.
@@ -294,7 +344,7 @@ StartTread:
         TASSV = 0
     }
     If (TASR = 1) {
-        InputBox, TASRV, Vivace's Macro, You have Set Rest Delay Enabled `nPlease Enter InputBox *only number *Default value is 9000,, 300, 150
+        InputBox, TASRV, Vivace's Macro, You have Set Rest Delay Enabled `nPlease Enter InputBox *only number *Default value is 9000,, 400, 150
         If ErrorLevel = 1
         {
             msgbox,,Vivace's Macro,You have incomplete information.
@@ -315,7 +365,8 @@ StartTread:
 Return
 
 SaveRec:
-    Gui, Submit, Destroy
+    Gui, Submit
+    Gui, Destroy
     If (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR")
     {
         msgbox,,Vivace's Macro,You have incomplete information.
@@ -346,4 +397,16 @@ Unz(sZip, sUnz)	{
 WM_LBUTTONDOWN() {
   If A_Gui
     PostMessage, 0xA1, 2
+}
+
+GetUrlStatus( URL, Timeout = -1 )
+{
+    ComObjError(0)
+    static WinHttpReq := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+
+    WinHttpReq.Open("HEAD", URL, True)
+    WinHttpReq.Send()
+    WinHttpReq.WaitForResponse(Timeout) ; Return: Success = -1, Timeout = 0, No response = Empty String
+
+    Return, WinHttpReq.Status()
 }
