@@ -281,7 +281,6 @@ If (TASR = "ERROR") {
 If (TAAC = "ERROR") {
     TAAC = 0
 }   
-
 IF (TAAL = "ERROR") {
     TAAL = 0
 }
@@ -440,6 +439,15 @@ StartTread:
     IniWrite, %TAAC%, settings.ini, AdvTreadmill, TAAC
     IniWrite, %TAAL%, settings.ini, AdvTreadmill, TAAL
     Eatingtype = 1
+    If (TD = "Fatigue Estimate")
+    {
+        Gui, Add, Text, y10,How Many Round:
+        Gui, Add, Edit, ym vRound number,
+        Gui, Add, Button, ym gHELLO, Done 
+        Gui, Show,, Vivace's Macro
+        Return
+    }
+    go1:
     If (TAAC = 1) {
         IniRead, KeyCombo, settings.ini, Record, RECKEY
         IniRead, List, settings.ini, Record, RECTYPE
@@ -450,46 +458,31 @@ StartTread:
             Gui, Add, Text, xm,Record Type:
             Gui, Add, DDL, +Theme x79 y30 vList, Record|ShadowPlay
             Gui, Show,, Vivace's Macro
+            Return
         }
     }
-
+    go:
     If (TASS = 1) {
-        InputBox, TASSV, Vivace's Macro, You have Set Start Delay Enabled `nPlease Enter InputBox *only number *Default value is 0,, 400, 150
-        If ErrorLevel = 1
-        {
-            msgbox,,Vivace's Macro,You have incomplete information.
-            ExitApp
-        }
-        If ErrorLevel = 0
-        {
-            If TASSV is not number
-            {
-                msgbox,,Vivace's Macro,You have invalid format.
-                ExitApp
-            }
-        }
+
+        Gui, Add, Text, y10,Start Delay Enabled:
+        Gui, Add, Edit, Number ym,
+        Gui, Add, Button, ym gXDDD, Done
+        Gui, Show,, Vivace's Macro
+        Return
     } else {
         TASSV = 0
     }
+    go2:
     If (TASR = 1) {
-        InputBox, TASRV, Vivace's Macro, You have Set Rest Delay Enabled `nPlease Enter InputBox *only number *Default value is 9000,, 400, 150
-        If ErrorLevel = 1
-        {
-            msgbox,,Vivace's Macro,You have incomplete information.
-            ExitApp
-        }
-        If ErrorLevel = 0
-        {
-            If TASRV is not number
-            {
-                msgbox,,Vivace's Macro,You have invalid format.
-                ExitApp
-            }
-        }
+        Gui, Add, Text, y10,Rest Delay Enabled:
+        Gui, Add, Edit, Number ym,
+        Gui, Add, Button, ym gXDDDD, Done
+        Gui, Show,, Vivace's Macro
+        Return
     } else {
         TASRV = 9000
     }
-
+    go3:
 Return
 
 SaveRec:
@@ -502,12 +495,25 @@ SaveRec:
     }
     IniWrite, %List%, settings.ini, Record, RECTYPE
     IniWrite, %KeyCombo%, settings.ini, Record, RECKEY
+    goto, go
 Return
 
+HELLO: 
+    Gui, Submit
+    Gui, Destroy
+    Goto, go1   
+Return
 
-
-
-
+XDDD:
+    Gui, Submit
+    Gui, Destroy
+    Goto, go2
+Return
+XDDDD:
+    Gui, Submit
+    Gui, Destroy
+    Goto, go3
+Return
 
 
 GuiClose:
