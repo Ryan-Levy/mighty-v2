@@ -1,3 +1,4 @@
+MsgBox, Space bar is ExitApp for now
 #Persistent
 #SingleInstance, force
 #NoEnv
@@ -483,18 +484,479 @@ StartTread:
         TASRV = 9000
     }
     go3:
+    ;;; treadmill part
+    Loop,
+    {
+        Gosub, CheckTreadmill
+        PixelSearch,,, 55, 145, 56, 145, 0x3A3A3A, 40, Fast ; Hungry
+        If ErrorLevel = 0
+        {
+            If (TE != "None")
+            {   
+                Click, 410, 345 ; Leave Treadmill
+                Sleep 1000
+                gosub, AutoEat
+                Send {BackSpace}
+                Sleep 200
+                UpTreadmill := A_TickCount
+                Loop,
+                {			
+                    Click , 409, 296
+                    Click , 409, 295
+                } Until A_TickCount - UpTreadmill > 1500
+            }
+        }
+        ImageSearch,,, 20, 120, 260, 140, *10 %A_WorkingDir%/resource-main/treadmill/Stamina.bmp
+        If ErrorLevel = 0
+        {
+            If (TS = "Stamina")
+            {
+                Click, 290, 310, 20
+            } 
+            If (TS = "RunningSpeed")
+            {
+                Click, 520, 310, 20
+            }
+            wait := A_TickCount
+            Loop,
+            {
+                PixelSearch,,, 339, 249, 340, 250, 0x5A5A5A,, Fast
+                If ErrorLevel = 0
+                {
+                    Break
+                }
+                PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30, Fast
+                If ErrorLevel = 0
+                {
+                    Break
+                } 
+            } Until A_TickCount - wait > 3000
+            Sleep 300
+            PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30, Fast
+            If ErrorLevel = 1
+            {
+                If (TL = "Auto")
+                {
+                    levely = 370
+                    levell = 5
+                    error = 0
+                    Loop,
+                    {
+                        ImageSearch,,, 390, 240, 430, 390, %A_WorkingDir%/resource-main/treadmill/level%levell%.bmp
+                        If ErrorLevel = 0
+                        {
+                            Click, 470 , %levely%, 10
+
+                            Break
+                        } else {
+                            levell--
+                            levely:=levely-30
+                            if levely <= 220
+                            {
+                                levely = 370
+                                levell = 5
+                                error++
+                                if error <= 50
+                                {
+                                    ;Broken = true
+                                    Level=
+                                    (
+                                        {
+                                            "username": "i love vivace's macro",
+                                            "content": "%id% You are pushed away from treadmill!",
+                                            "embeds": null
+                                        }
+                                    )
+                                    req.Send(Level)
+                                    If (TAAC = 1) {
+                                        Gosub, Clipper
+                                    }
+                                }
+                            }
+                        }
+                    } 
+                }
+                If (TL = 5)
+                {
+                    Click, 470, 370, 10
+                }
+                If (TL = 4)
+                {
+                    Click, 470, 340, 10
+                }
+                If (TL = 3)
+                {
+                    Click, 470, 310, 10
+                }
+                If (TL = 2)
+                {
+                    Click, 470, 280, 10
+                }
+                If (TL = 1)
+                {
+                    Click, 470, 250, 10
+                }
+            }
+            Sleep 300
+            HandCheck:=A_TickCount
+            Loop,
+            {
+                HandCheck1 := A_TickCount - HandCheck
+                PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30, Fast
+                If ErrorLevel = 0
+                {
+                    Click , 410, 355, 10
+                    Break
+                }
+                If (HandCheck1 > 10000)
+                {
+                    Msgbox, Not Found Hand Money Ranout
+                }
+            }
+            Sleep 3000
+            button := "w,a,s,d"
+            TreadmillTask := A_TickCount
+            If (TASS = 1)
+            {
+                Sleep %TASSV%
+            }
+            Loop, ; treadmill 
+            {
+                TaskTimer := A_TickCount - TreadmillTask
+                Loop, Parse, button, `,
+                {
+                    ImageSearch,,, 200, 240, 600, 300, *50 %A_WorkingDir%\resource-main\treadmill\%A_LoopField%.bmp
+                    If ErrorLevel = 0
+                    {
+                        If A_LoopField = w
+                        {
+                            keyw := "w"
+                            keyw := format("sc{:x}", getKeySC(keyw))
+                            Send {%keyw%}
+                        }
+                        If A_LoopField = a
+                        {
+                            keya := "a"
+                            keya := format("sc{:x}", getKeySC(keya))
+                            Send {%keya%}
+                        }
+                        Send, %A_LoopField%
+                        Break
+                    }
+                } ; stam detect
+                If (TASD = 1)
+                {
+                    If (TA = "High")
+                    {
+                        PixelSearch ,,, 40, 130, 40, 133, 0x3A3A3A, 40, Fast
+                        If ErrorLevel = 0
+                        {
+                            Gosub, WaitTreadmill
+                        }
+                    }
+                    If (TA = "Medium")
+                    {
+                        PixelSearch ,,, 40, 130, 50, 133, 0x3A3A3A, 40, Fast
+                        If ErrorLevel = 0
+                        {
+                            Gosub, WaitTreadmill
+                        }
+                    }
+                    If (TA = "Low")
+                    {
+                        PixelSearch ,,, 40, 130, 60, 133, 0x3A3A3A, 40, Fast
+                        If ErrorLevel = 0
+                        {
+                            Gosub, WaitTreadmill
+                        }
+                    }
+                }
+                If (TaskTimer > 55000)
+                {
+                    Click, 400, 290
+                }
+                If (TaskTimer > 65000) 
+                {
+                    Break
+                }
+            } 
+        }
+        PixelSearch,,, 55, 145, 56, 145, 0x3A3A3A, 40, Fast ; Hungry
+        If ErrorLevel = 0
+        {
+            If (STE != "None")
+            {   
+                Click, 410, 345 ; Leave Treadmill
+                Sleep 1000
+                gosub, AutoEat
+                Send {BackSpace}
+                Sleep 200
+                UpTreadmill := A_TickCount
+                Loop,
+                {			
+                    Click , 409, 296
+                    Click , 409, 295
+                } Until A_TickCount - UpTreadmill > 1500
+            }
+        }
+        Pixelsearch,,, 79, 98, 80, 99, 0x38388E, 10, Fast ; Combat Tag 
+        if ErrorLevel = 0
+        {
+            send {o down}
+            Sleep 1000
+            Send {o up}
+            If (TAAC = 1)
+            {
+                If record = true
+                {
+                    Send %bind%
+                }
+                PixelSearch,,, 565, 90, 566 , 91, 0xFFFFFF, 10
+                IF ErrorLevel = 1
+                {
+                    Send {Tab}
+                }
+                MouseMove, 765, 125
+                Loop, 10
+                {
+                    Click, WheelUp
+                    Sleep 100
+                }
+                Loop, 79
+                {
+                    MouseMove, 0, 5, 1.7, r
+                }
+                Click, 805, 160, Down
+                Click, 805, 285, Up
+                MouseMove, 765, 125
+                Loop, 79
+                {
+                    MouseMove, 0, 5, 1.7, r
+                }
+                if instant = true
+                {
+                    Send %bind%
+                } 
+                if record = true
+                {
+                    Send %bind%
+                }
+                Click, 805, 285, Down
+                Click, 805, 410, Up
+                MouseMove, 765, 125
+                MouseMove, 0, 79, 20, r
+            }
+            MsgBox, Macro Ruined
+        }
+        ;; auto log for fatigue estimate
+    }
+Return
+WaitTreadmill:
+    If (TASR = "0")
+    {
+        DefaultWait:=9000
+    }
+    If (TASR = "1")
+    {
+        DefaultWait:=TASRV
+    }
+    TimerSleep := A_TickCount
+    Loop,
+    {
+        TaskSleep := A_TickCount - TimerSleep
+        TaskTimer := A_TickCount - TreadmillTask
+        Tooltip, %TaskSleep% %TaskTimer%
+        If (TaskSleep > DefaultWait)
+        {
+            Break
+        }
+        If (TaskTimer > 65000)
+        {
+            Break
+        }
+        If (TaskTimer > 55000)
+        {
+            Click, 400, 290
+        }
+    }
+    Tooltip,
+Return
+Clipper:
+    IniRead, RECTYPE, seittngs.ini, Record, RECTYPE
+    IniRead, RECKEY, seittngs.ini, Record, RECKEY
+    ;; RECTYPE=ShadowPlay
+    ;; RECKEY=Win+Alt+G
+
+    If RECTYPE = "Record"
+    {
+        Send %RECKEY%
+    }
+    PixelSearch,,, 565, 90, 566 , 91, 0xFFFFFF, 10
+    IF ErrorLevel = 1
+    {
+        Send {Tab}
+    }
+    MouseMove, 765, 125
+    Loop, 10
+    {
+        Click, WheelUp
+        Sleep 100
+    }
+    Loop, 79
+    {
+        MouseMove, 0, 5, 1.7, r
+    }
+    Click, 805, 160, Down
+    Click, 805, 285, Up
+    MouseMove, 765, 125
+    Loop, 79
+    {
+        MouseMove, 0, 5, 1.7, r
+    }
+    if instant = true
+    {
+        Send %bind%
+    } 
+    if record = true
+    {
+        Send %bind%
+    }
+    Click, 805, 285, Down
+    Click, 805, 410, Up
+    MouseMove, 765, 125
+    MouseMove, 0, 79, 20, r
+Return
+AutoEat:
+    If Eatingtype = 1
+    {
+        Slot:="1,2,3,4,5,6,7,8,9,0"
+    }
+    If Eatingtype = 2
+    {
+        Slot:="2,3,4,5,6,7,8,9,0"
+    }
+    If Eatingtype = 3
+    {
+        Slot:="3,4,5,6,7,8,9,0"
+    }
+    Loop, Parse, Slot, `,
+    {
+        Send %A_LoopField%
+        Sleep 150
+        ImageSearch,,, 60, 520, 760, 550, %A_WorkingDir%/resource-main/slotequip.bmp
+        If ErrorLevel = 0
+        {
+            Loop, 
+            {
+                PixelSearch, x, y, 119, 144, 110, 146, 0x3A3A3A, 40, Fast
+                If ErrorLevel = 0
+                {
+                    Click, 405, 620
+                    ImageSearch,,, 60, 520, 760, 550, %A_WorkingDir%/resource-main/slotequip.bmp
+                    If ErrorLevel = 1
+                    {
+                        Goto, AutoEat
+                    }
+                }
+                If ErrorLevel = 1
+                {
+                    Return
+                }
+            }
+        }
+    }
+    If Eatingtype = 1
+    {
+        If (TE = "SlotEat")
+        {
+            MsgBox, Not Found Any Food Left In Slot
+        }
+    }
+
+
+    If Eatingtype = 1
+    {
+        If (TE = "Slot+Inventory") ;; open slot
+        {
+            gosub, grave
+            MouseMove, 100, 480
+            Sleep 600
+            if Eatingtype = 1
+            {
+                xx=95
+                Loop = 10
+            }
+            gosub, draginventory
+            MouseMove, 100, 480
+            gosub, grave
+            Sleep 300
+            goto, AutoEat
+        }
+    }
+Return
+CheckTreadmill:
+    if WinExist("Ahk_exe RobloxPlayerBeta.exe")
+    {
+        WinActivate
+        WinGetPos,,,W,H,A
+        If ((W >= A_ScreenWidth ) & (H >= A_ScreenHeight))
+        {
+            Send {F11}
+            Sleep 100
+        }
+        if ((W > 816) & ( H > 638))
+        {
+            WinMove, Ahk_exe RobloxPlayerBeta.exe,,,, 800, 599 
+        }
+        
+    } else {
+        MsgBox,,Vivace's Macro,Roblox not active,3
+        ExitApp
+    }
 Return
 
+draginventory:
+Loop, %Loop%
+{
+    ImageSearch, x, y, 90, 195, 675, 500, *10 %A_WorkingDir%/resource-main/x5.bmp
+    If ErrorLevel = 0
+    {
+        Sleep 40
+        Click, %x%, %y%, Down
+        Sleep 50
+        Click, %xx%, 555, Up
+        Sleep 60
+        xx:=xx+70
+    }
+    if ErrorLevel = 1
+    {
+        If (A_Index = 1) {
+            MsgBox, Food ran out of inventory + Break
+            ExitApp
+        }
+        Break
+    }   
+}
+Return
+grave:
+    keygrave := "``"
+    keygrave := format("sc{:x}", getKeySC(keygrave))
+    send {%keygrave%}
+Return
 SaveRec:
     Gui, Submit
     Gui, Destroy
-    If (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR")
-    {
+    If (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
         msgbox,,Vivace's Macro,You have incomplete information.
         ExitApp
     }
+    if ((KeyCombo = "F8") or (KeyCombo = "F12")) {
+        IniWrite, {%KeyCombo%}, settings.ini, Record, RECKEY
+    } else if (KeyCombo = "Win+Alt+G") {
+        IniWrite, #!g, settings.ini, Record, RECKEY
+    }
     IniWrite, %List%, settings.ini, Record, RECTYPE
-    IniWrite, %KeyCombo%, settings.ini, Record, RECKEY
+    
     goto, go
 Return
 
@@ -544,3 +1006,4 @@ GetUrlStatus( URL, Timeout = -1 )
 
     Return, WinHttpReq.Status()
 }
+space::ExitApp
