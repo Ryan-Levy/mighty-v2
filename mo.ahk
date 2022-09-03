@@ -394,9 +394,6 @@ Return
 
 
 
-Treadmill: ;//
-
-Weight: ;//
 
 StrikePower:
 
@@ -413,6 +410,12 @@ TrainStamina:
 LoseFat:
 
 LoseMuscle:
+
+Weight1:
+    Gui, Submit
+    Gui, Destroy
+    Goto, w1
+Return
 StartWeight:
     Gui, Submit
     Gui, Destroy
@@ -424,6 +427,245 @@ StartWeight:
     IniWrite, %WASR%, settings.ini, AdvWeight, WASR
     IniWrite, %WAAC%, settings.ini, AdvWeight, WAAC
     IniWrite, %WAAL%, settings.ini, AdvWeight, WAAL
+    Eatingtype = 1
+    If (WD = "Fatigue Estimate")
+    {
+        Gui, Add, Text, y10,How Many Round:
+        Gui, Add, Edit, ym vRound number,
+        Gui, Add, Button, ym gWeight1, Done 
+        Gui, Show,, Vivace's Macro
+        Return
+    }
+    w1:
+    If (WAAC = 1) {
+        IniRead, KeyCombo, settings.ini, Record, RECKEY
+        IniRead, List, settings.ini, Record, RECTYPE
+        if (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
+            Gui, Add, Text, y10,Record Key:
+            Gui, Add, DDL, +Theme ym vKeyCombo , Win+Alt+G|F8|F12
+            Gui, Add, Button, ym gSaveRec1, Done
+            Gui, Add, Text, xm,Record Type:
+            Gui, Add, DDL, +Theme x79 y30 vList, Record|ShadowPlay
+            Gui, Show,, Vivace's Macro
+            Return
+        }
+    }
+    w2:
+    If (WASR = 1) {
+        Gui, Add, Text, y10,Rest Delay Enabled:
+        Gui, Add, Edit, Number ym,
+        Gui, Add, Button, ym gWcd, Done
+        Gui, Show,, Vivace's Macro
+        Return
+    } else {
+        TASRV = 9000
+    }
+    w3:
+    ;; weight
+    Loop,
+    {
+        Gosub, CheckWeight
+        If (WE != "None") {
+            PixelSearch,,, 55, 145, 56, 145, 0x3A3A3A, 40, Fast ; Hungry
+            If ErrorLevel = 0
+            {
+                Click, 400, 455 ; Leave weight
+                Sleep 500
+                Gosub, autoeat
+                Send {BackSpace}
+                Sleep 200
+                UpWeight := A_TickCount
+                Loop,
+                {			
+                    Click , 409, 396
+                    Click , 409, 395
+                } Until A_TickCount - UpWeight > 1500
+            }
+        }
+        ImageSearch,,, 20, 120, 260, 140, *10 %A_WorkingDir%/resource-main/weight/Stamina.bmp
+        If ErrorLevel = 0
+        {
+            PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30, Fast ;if green hand isn't in middle
+            If ErrorLevel = 1
+            {
+                If (WL = "Auto")
+                {
+                    levely = 400
+                    levell = 6
+                    error = 0
+                    Loop,
+                    {
+                        ImageSearch,,, 390, 240, 430, 390, %A_WorkingDir%/resource-main/weight/w%levell%.bmp
+                        If ErrorLevel = 0
+                        {
+                            Click, 470 , %levely%, 10
+                            Click, 10
+                            Sleep 100
+                            tooltip, choosed %levell%
+                            Break
+                        } else {
+                            levell--
+                            levely:=levely-30
+                            if levely <= 220
+                            {
+                                levely = 40
+                                levell = 6
+                                error++
+                                if error <= 50
+                                {
+                                    ;Broken = true
+                                    msgbox, Level Not Found
+                                }
+                            }
+                        }
+                    }
+                    If (WL = 6)
+                    {
+                        Click, 470, 400, 10 
+                    }
+                    If (WL = 5)
+                    {
+                        Click, 470, 370, 10
+                    }
+                    If (TL = 4)
+                    {
+                        Click, 470, 340, 10
+                    }
+                    If (TL = 3)
+                    {
+                        Click, 470, 310, 10
+                    }
+                    If (TL = 2)
+                    {
+                        Click, 470, 280, 10
+                    }
+                    If (TL = 1)
+                    {
+                        Click, 470, 250, 10
+                    }
+                    Sleep 300
+                    tooltip
+                }
+                HandCheck:=A_TickCount
+                Loop,
+                {
+                    HandCheck1 := A_TickCount - HandCheck
+                    PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30, Fast
+                    If ErrorLevel = 0
+                    {
+                        Click , 410, 355, 10
+                        Break
+                    }
+                    If (HandCheck1 > 10000)
+                    {
+                        Msgbox, Not Found Hand Money Ranout
+                    }
+                }
+                WeightTask := A_TickCount
+                Loop,
+                {
+                    TaskTimer := A_TickCount - WeightTask
+                    ImageSearch, PosX, PosY, 250, 220, 560, 440, *25 %A_WorkingDir%\resource-main\weight\yellow.png
+                    If ErrorLevel = 0
+                    {
+                        PosX:=PosX+5
+                        PosY:=PosY+5
+                        Click, %PosX%, %PosY%, 10
+                        Sleep 50
+                        MouseMove, 400, 540
+                        Sleep 10
+                    }
+                    ;; Stam Detect
+                    If (WASD = 1)
+                    {
+                        If (WA = "High")
+                        {
+                            PixelSearch ,,, 40, 130, 40, 133, 0x3A3A3A, 40, Fast
+                            If ErrorLevel = 0
+                            {
+                                Gosub, WaitWeight
+                            }
+                        }
+                        If (WA = "Medium")
+                        {
+                            PixelSearch ,,, 40, 130, 50, 133, 0x3A3A3A, 40, Fast
+                            If ErrorLevel = 0
+                            {
+                                Gosub, WaitWeight
+                            }
+                        }
+                        If (WA = "Low")
+                        {
+                            PixelSearch ,,, 40, 130, 60, 133, 0x3A3A3A, 40, Fast
+                            If ErrorLevel = 0
+                            {
+                                Gosub, WaitWeight
+                            }
+                        }
+                    }
+                    If (TaskTimer > 55000) {
+                        Click, 400, 391
+                    }
+                    If (TaskTimer > 70000) {
+                        Break
+                    }
+                    ;; 
+
+                }
+            }
+        }
+        ;; Combat Detect
+    }
+Return
+WaitWeight:
+    If (WASR = "0") {
+        DefaultWait:=9000
+    }
+    If (WASR = "1") {
+        DefaultWait:=WASR
+    }
+    TimerSleep := A_TickCount
+    Loop,
+    {
+        TaskSleep := A_TickCount - TimerSleep
+        TaskTimer := A_TickCount - TreadmillTask
+        Tooltip, %TaskSleep% %TaskTimer%
+        If (TaskSleep > DefaultWait)
+        {
+            Break
+        }
+        If (TaskTimer > 65000)
+        {
+            Break
+        }
+        If (TaskTimer > 55000)
+        {
+            Click, 400, 391
+        }
+    }
+    Tooltip,
+Return
+CheckWeight:
+    if WinExist("Ahk_exe RobloxPlayerBeta.exe")
+    {
+        WinActivate
+        WinGetPos,,,W,H,A
+        If ((W >= A_ScreenWidth ) & (H >= A_ScreenHeight)) {
+            Send {F11}
+            Sleep 100
+        }
+        if ((W > 816) & ( H > 638)) {
+            WinMove, Ahk_exe RobloxPlayerBeta.exe,,,, 800, 599 
+        }
+    } else {
+        MsgBox,,Vivace's Macro,Roblox not active,3
+        ExitApp
+    }
+Return
+Wcd:
+    Gui, Submit
+    Gui, Destroy
+    Goto, w3
 Return
 StartTread:
     ;MsgBox, ALOALAOALO
@@ -464,9 +706,8 @@ StartTread:
     }
     go:
     If (TASS = 1) {
-
         Gui, Add, Text, y10,Start Delay Enabled:
-        Gui, Add, Edit, Number ym,
+        Gui, Add, Edit, Number ym vTASS,
         Gui, Add, Button, ym gXDDD, Done
         Gui, Show,, Vivace's Macro
         Return
@@ -476,7 +717,7 @@ StartTread:
     go2:
     If (TASR = 1) {
         Gui, Add, Text, y10,Rest Delay Enabled:
-        Gui, Add, Edit, Number ym,
+        Gui, Add, Edit, Number ym vTASRV,
         Gui, Add, Button, ym gXDDDD, Done
         Gui, Show,, Vivace's Macro
         Return
@@ -914,7 +1155,6 @@ CheckTreadmill:
         ExitApp
     }
 Return
-
 draginventory:
 Loop, %Loop%
 {
@@ -956,10 +1196,23 @@ SaveRec:
         IniWrite, #!g, settings.ini, Record, RECKEY
     }
     IniWrite, %List%, settings.ini, Record, RECTYPE
-    
     goto, go
 Return
-
+SaveRec1:
+    Gui, Submit
+    Gui, Destroy
+    If (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
+        msgbox,,Vivace's Macro,You have incomplete information.
+        ExitApp
+    }
+    if ((KeyCombo = "F8") or (KeyCombo = "F12")) {
+        IniWrite, {%KeyCombo%}, settings.ini, Record, RECKEY
+    } else if (KeyCombo = "Win+Alt+G") {
+        IniWrite, #!g, settings.ini, Record, RECKEY
+    }
+    IniWrite, %List%, settings.ini, Record, RECTYPE
+    goto, w2
+Return
 HELLO: 
     Gui, Submit
     Gui, Destroy
