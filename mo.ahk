@@ -226,62 +226,11 @@ Gui, Add, Checkbox, vSPAAL ,Auto Leave
 
 Gui, Add, Button,xm+321 ym+240 v3button gStartSP ,Done ;; start button
 ;; load option on settings.ini
-
-GuiControl, Hide, SPTab
-
-GuiControl, Hide, vvtext1
-GuiControl, Hide, vvtext2
-GuiControl, Hide, vvtext3
-GuiControl, Hide, vvtext4
-GuiControl, Hide, vvtext5
-
-GuiControl, Hide, SPA
-GuiControl, Hide, SPR
-GuiControl, Hide, SPE
-GuiControl, Hide, SPD
-
-GuiControl, Hide, SPASR
-GuiControl, Hide, SPAAC
-GuiControl, Hide, SPAAL
-
-GuiControl, Hide, 3button
-;;
-
-
-GuiControl, Hide, 2Button
-GuiControl, Hide, WeightTab
-GuiControl, Hide, vtext1
-GuiControl, Hide, vtext2
-GuiControl, Hide, vtext3
-GuiControl, Hide, vtext4
-GuiControl, Hide, vtext5
-GuiControl, Hide, WL
-GuiControl, Hide, WE
-GuiControl, Hide, WD
-GuiControl, Hide, WA
-GuiControl, Hide, WASD
-GuiControl, Hide, WASR
-GuiControl, Hide, WAAC
-GuiControl, Hide, WAAL
-;;
-GuiControl, Hide, Button
-GuiControl, Hide, TreadmillTab 
-GuiControl, Hide, TS
-GuiControl, Hide, TL
-GuiControl, Hide, TE
-GuiControl, Hide, TD
-GuiControl, Hide, TA
-GuiControl, Hide, text1
-GuiControl, Hide, text2
-GuiControl, Hide, text3
-GuiControl, Hide, text4
-GuiControl, Hide, text5
-GuiControl, Hide, text6
-GuiControl, Hide, TASD
-GuiControl, Hide, TASS
-GuiControl, Hide, TASR
-GuiControl, Hide, TAAC
-GuiControl, Hide, TAAL
+Hidethis:="SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,3button,2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL"
+Loop, Parse, Hidethis, `,
+{
+    GuiControl, Hide, %A_LoopField%
+}
 
 ;; load saved ddl
 GuiControl, Choose, TS, %TS%
@@ -294,6 +243,21 @@ GuiControl, Choose, WL, %WL%
 GuiControl, Choose, WE, %WE%
 GuiControl, Choose, WD, %WD%
 GuiControl, Choose, WA, %WA%
+
+GuiControl, Choose, SPA, %SPA%
+GuiControl, Choose, SPR, %SPR%
+GuiControl, Choose, SPE, %SPR%
+GuiControl, Choose, SPD, %SPR%
+
+If (SPASR = "ERROR") {
+    SPASR = 0
+}
+If (SPAAC = "ERROR") {
+    SPAAC = 0
+}
+If (SPAAL = "ERROR") {
+    SPAAL = 0
+}
 
 If (WASD = "ERROR") {
     WASD = 0
@@ -346,55 +310,16 @@ WinSet, Region, 0-0 h300 w700 R15-15,Vivace's Macro
 Return
 
 test:
-
-    GuiControl, Show, Button
-    GuiControl, Show, TreadmillTab 
-    GuiControl, Show, TS
-    GuiControl, Show, TL
-    GuiControl, Show, TE
-    GuiControl, Show, TD
-    GuiControl, Show, TA
-    GuiControl, Show, text1 
-    GuiControl, Show, text2
-    GuiControl, Show, text3
-    GuiControl, Show, text4
-    GuiControl, Show, text5
-    GuiControl, Show, text6
-    GuiControl, Show, TASD
-    GuiControl, Show, TASS
-    GuiControl, Show, TASR
-    GuiControl, Show, TAAC
-    GuiControl, Show, TAAL
-
-    GuiControl, Hide, 2Button
-    GuiControl, Hide, WeightTab
-    GuiControl, Hide, vtext1
-    GuiControl, Hide, vtext2
-    GuiControl, Hide, vtext3
-    GuiControl, Hide, vtext4
-    GuiControl, Hide, vtext5
-    GuiControl, Hide, WL
-    GuiControl, Hide, WE
-    GuiControl, Hide, WD
-    GuiControl, Hide, WA
-    GuiControl, Hide, WASD
-    GuiControl, Hide, WASR
-    GuiControl, Hide, WAAC
-    GuiControl, Hide, WAAL
-    GuiControl, Hide, SPTab
-    GuiControl, Hide, vvtext1
-    GuiControl, Hide, vvtext2
-    GuiControl, Hide, vvtext3
-    GuiControl, Hide, vvtext4
-    GuiControl, Hide, vvtext5
-    GuiControl, Hide, SPA
-    GuiControl, Hide, SPR
-    GuiControl, Hide, SPE
-    GuiControl, Hide, SPD
-    GuiControl, Hide, SPASR
-    GuiControl, Hide, SPAAC
-    GuiControl, Hide, SPAAL
-    GuiControl, Hide, 3button
+    Showthis:="Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL"
+    Loop,Parse,Showthis,`,
+    {
+        GuiControl, Show, %A_LoopField%
+    }
+    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,3button"
+    Loop,Parse,Hidethis,`,
+    {
+        GuiControl, Hide, %A_LoopField%
+    }
 Return
 test2:
     GuiControl, Hide, Button
@@ -533,7 +458,61 @@ Weight1:
     Goto, w1
 Return
 StartSP:
-
+    Gui, Submit
+    Gui, Destroy
+    IniWrite, %SPR%, settings.ini, StrikePower, SPR
+    IniWrite, %SPA%, settings.ini, StrikePower, SPA
+    IniWrite, %SPD%, settings.ini, StrikePower, SPD
+    IniWrite, %SPE%, settings.ini, StrikePower, SPE
+    IniWrite, %SPASR%, settings.ini, AdvStrikePower, SPASR
+    IniWrite, %SPAAC%, settings.ini, AdvStrikePower, SPAAC
+    IniWrite, %SPAAL%, settings.ini, AdvStrikePower, SPAAL
+    Eatingtype = 2
+    If (SPASR = "1") {
+        Gui, Add, Text, y10,Rest Delay Enabled:
+        Gui, Add, Edit, Number ym vWASRV,
+        Gui, Add, Button, ym gSPcd, Done
+        Gui, Show,, Vivace's Macro
+        Return
+        SPcd:
+        Gui, Submit
+        Gui, Destroy
+    } else {
+        WASRV = 9000
+    }
+    If (SPAAC = "1") {
+        IniRead, KeyCombo, settings.ini, Record, RECKEY
+        IniRead, List, settings.ini, Record, RECTYPE
+        if (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
+            Gui, Add, Text, y10,Record Key:
+            Gui, Add, DDL, +Theme ym vKeyCombo , Win+Alt+G|F8|F12
+            Gui, Add, Button, ym gSaveRec2, Done
+            Gui, Add, Text, xm,Record Type:
+            Gui, Add, DDL, +Theme x79 y30 vList, Record|ShadowPlay
+            Gui, Show,, Vivace's Macro
+        }
+        Return
+        Saverec2:
+        {
+            gosub, woo
+            goto, sp2
+        }
+    }
+    sp2:
+    If (WD = "Fatigue Estimate")
+    {
+        Gui, Add, Text, y10,How Many Round:
+        Gui, Add, Edit, ym vRound number,
+        Gui, Add, Button, ym gSP3, Done 
+        Gui, Show,, Vivace's Macro
+        Return
+        SP3:
+        Gui, Submit
+        Gui, Destroy
+    }
+    ;; Sp Macro
+    
+    
 Return
 StartWeight:
     Gui, Submit
@@ -572,12 +551,12 @@ StartWeight:
     w2:
     If (WASR = 1) {
         Gui, Add, Text, y10,Rest Delay Enabled:
-        Gui, Add, Edit, Number ym,
+        Gui, Add, Edit, Number ym vWASRV,
         Gui, Add, Button, ym gWcd, Done
         Gui, Show,, Vivace's Macro
         Return
     } else {
-        TASRV = 9000
+        WASRV = 9000
     }
     w3:
     ;; weight
@@ -778,7 +757,7 @@ CheckWeight:
         }
     } else {
         MsgBox,,Vivace's Macro,Roblox not active,3
-        ExitApp
+        ;ExitApp
     }
 Return
 Wcd:
@@ -1302,7 +1281,7 @@ grave:
     keygrave := format("sc{:x}", getKeySC(keygrave))
     send {%keygrave%}
 Return
-SaveRec:
+woo:
     Gui, Submit
     Gui, Destroy
     If (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
@@ -1315,23 +1294,17 @@ SaveRec:
         IniWrite, #!g, settings.ini, Record, RECKEY
     }
     IniWrite, %List%, settings.ini, Record, RECTYPE
+Return
+SaveRec:
+    gosub, woo
     goto, go
 Return
 SaveRec1:
-    Gui, Submit
-    Gui, Destroy
-    If (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
-        msgbox,,Vivace's Macro,You have incomplete information.
-        ExitApp
-    }
-    if ((KeyCombo = "F8") or (KeyCombo = "F12")) {
-        IniWrite, {%KeyCombo%}, settings.ini, Record, RECKEY
-    } else if (KeyCombo = "Win+Alt+G") {
-        IniWrite, #!g, settings.ini, Record, RECKEY
-    }
-    IniWrite, %List%, settings.ini, Record, RECTYPE
+    gosub, woo
     goto, w2
 Return
+SaveRec2:
+    
 HELLO: 
     Gui, Submit
     Gui, Destroy
