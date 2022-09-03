@@ -310,117 +310,41 @@ WinSet, Region, 0-0 h300 w700 R15-15,Vivace's Macro
 Return
 
 test:
-    Showthis:="Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL"
+    Showthis:="Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL" 
+    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,3button"
     Loop,Parse,Showthis,`,
     {
         GuiControl, Show, %A_LoopField%
     }
-    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,3button"
     Loop,Parse,Hidethis,`,
     {
         GuiControl, Hide, %A_LoopField%
     }
 Return
 test2:
-    GuiControl, Hide, Button
-    GuiControl, Hide, TreadmillTab 
-    GuiControl, Hide, TS
-    GuiControl, Hide, TL
-    GuiControl, Hide, TE
-    GuiControl, Hide, TD
-    GuiControl, Hide, TA
-    GuiControl, Hide, text1
-    GuiControl, Hide, text2
-    GuiControl, Hide, text3
-    GuiControl, Hide, text4
-    GuiControl, Hide, text5
-    GuiControl, Hide, text6
-    GuiControl, Hide, TASD
-    GuiControl, Hide, TASS
-    GuiControl, Hide, TASR
-    GuiControl, Hide, TAAC
-    GuiControl, Hide, TAAL
-    GuiControl, Hide, SPTab
-    GuiControl, Hide, vvtext1
-    GuiControl, Hide, vvtext2
-    GuiControl, Hide, vvtext3
-    GuiControl, Hide, vvtext4
-    GuiControl, Hide, vvtext5
-    GuiControl, Hide, SPA
-    GuiControl, Hide, SPR
-    GuiControl, Hide, SPE
-    GuiControl, Hide, SPD
-    GuiControl, Hide, SPASR
-    GuiControl, Hide, SPAAC
-    GuiControl, Hide, SPAAL
-    GuiControl, Hide, 3button
-
-    GuiControl, Show, 2Button
-    GuiControl, Show, WeightTab
-    GuiControl, Show, vtext1
-    GuiControl, Show, vtext2
-    GuiControl, Show, vtext3
-    GuiControl, Show, vtext4
-    GuiControl, Show, vtext5
-    GuiControl, Show, WL
-    GuiControl, Show, WE
-    GuiControl, Show, WD
-    GuiControl, Show, WA
-    GuiControl, Show, WASD
-    GuiControl, Show, WASR
-    GuiControl, Show, WAAC
-    GuiControl, Show, WAAL
+    Showthis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL"
+    Hidethis:="Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,3button"
+    Loop, Parse, Hidethis, `,
+    {
+        GuiControl, Hide, %A_LoopField%
+    }
+    Loop, Parse, Showthis, `,
+    {
+        GuiControl, Show, %A_LoopField%
+    }
 Return
 test3:
-    GuiControl, Hide, 2Button
-    GuiControl, Hide, WeightTab
-    GuiControl, Hide, vtext1
-    GuiControl, Hide, vtext2
-    GuiControl, Hide, vtext3
-    GuiControl, Hide, vtext4
-    GuiControl, Hide, vtext5
-    GuiControl, Hide, WL
-    GuiControl, Hide, WE
-    GuiControl, Hide, WD
-    GuiControl, Hide, WA
-    GuiControl, Hide, WASD
-    GuiControl, Hide, WASR
-    GuiControl, Hide, WAAC
-    GuiControl, Hide, WAAL
-    GuiControl, Hide, Button
-    GuiControl, Hide, TreadmillTab 
-    GuiControl, Hide, TS
-    GuiControl, Hide, TL
-    GuiControl, Hide, TE
-    GuiControl, Hide, TD
-    GuiControl, Hide, TA
-    GuiControl, Hide, text1
-    GuiControl, Hide, text2
-    GuiControl, Hide, text3
-    GuiControl, Hide, text4
-    GuiControl, Hide, text5
-    GuiControl, Hide, text6
-    GuiControl, Hide, TASD
-    GuiControl, Hide, TASS
-    GuiControl, Hide, TASR
-    GuiControl, Hide, TAAC
-    GuiControl, Hide, TAAL
-    
+    Showthis:="SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,3button"
+    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL"
+    Loop, Parse, Hidethis, `,
+    {
+        GuiControl, Hide, %A_LoopField%
+    }
+    Loop, Parse, Showthis, `,
+    {
+        GuiControl, Show, %A_LoopField%
+    }
 
-    GuiControl, Show, SPTab
-    GuiControl, Show, vvtext1
-    GuiControl, Show, vvtext2
-    GuiControl, Show, vvtext3
-    GuiControl, Show, vvtext4
-    GuiControl, Show, vvtext5
-    GuiControl, Show, SPA
-    GuiControl, Show, SPR
-    GuiControl, Show, SPE
-    GuiControl, Show, SPD
-    GuiControl, Show, SPASR
-    GuiControl, Show, SPAAC
-    GuiControl, Show, SPAAL
-    GuiControl, Show, 3button
 Return
 Minimize:
     ExitApp
