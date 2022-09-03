@@ -152,7 +152,7 @@ Gui, Add, Picture, gcopy w16 h16 X645 y10, discord.png
 Gui, Add, Picture, gminimize w16 h16 X670 y10, Minimize.png
 Gui, Add, Picture, gtest w32 h32 x10 y30 , Treadmill.png
 Gui, Add, Picture, gtest2 w32 h32 x10 y75 , Weight.png
-Gui, Add, Picture, gtest2 w32 h32 x10 y110 , sp.png
+Gui, Add, Picture, gtest3 w32 h32 x10 y110 , sp.png
 Gui, Add, Picture, gtest2 w32 h32 x10 y155 , ss.png
 
 Gui, Add, GroupBox,  x50 y30 w630 h250 vTreadmillTab, Treadmill's Option
@@ -204,10 +204,48 @@ Gui, Add, Checkbox, vWAAL ,Auto Leave
 Gui, Add, Button,xm+321 ym+240 v2button gStartWeight ,Done ;; start button
 
 
+
+;; strike power
+Gui, Add, GroupBox,  x50 y30 w630 h250 vSPTab, Strike Power's Option
+
+Gui, Add, Text, xm+55 ym+50 vvvtext1,Rhythm Flow Options
+Gui, Add, DropDownList, vSPR,None|Rhythm|Rhythm+Flow
+Gui, Add, Text, vvvtext2,What's Your Stamina Amount?
+Gui, Add, DropDownList, vSPA ,High|Medium|Low
+
+Gui, Add, Text, xm+250 ym+50 vvvtext3 ,Duration Options?
+Gui, Add, DropDownList,vSPD ,Macro Indefinitely|Fatigue estimate
+Gui, Add, Text, vvvtext4 ,Auto Eat Options
+Gui, Add, DropDownList, vSPE ,None|Slot Eat|Slot+Inventory 
+
+Gui, Add, Text,xm+445 ym+50 vvvtext5 ,Advance Options
+
+Gui, Add, Checkbox, vSPASR ,Set Rest Delay
+Gui, Add, Checkbox, vSPAAC ,Auto Clip 
+Gui, Add, Checkbox, vSPAAL ,Auto Leave 
+
+Gui, Add, Button,xm+321 ym+240 v3button gStartSP ,Done ;; start button
 ;; load option on settings.ini
 
+GuiControl, Hide, SPTab
 
+GuiControl, Hide, vvtext1
+GuiControl, Hide, vvtext2
+GuiControl, Hide, vvtext3
+GuiControl, Hide, vvtext4
+GuiControl, Hide, vvtext5
 
+GuiControl, Hide, SPA
+GuiControl, Hide, SPR
+GuiControl, Hide, SPE
+GuiControl, Hide, SPD
+
+GuiControl, Hide, SPASR
+GuiControl, Hide, SPAAC
+GuiControl, Hide, SPAAL
+
+GuiControl, Hide, 3button
+;;
 
 
 GuiControl, Hide, 2Button
@@ -343,6 +381,20 @@ test:
     GuiControl, Hide, WASR
     GuiControl, Hide, WAAC
     GuiControl, Hide, WAAL
+    GuiControl, Hide, SPTab
+    GuiControl, Hide, vvtext1
+    GuiControl, Hide, vvtext2
+    GuiControl, Hide, vvtext3
+    GuiControl, Hide, vvtext4
+    GuiControl, Hide, vvtext5
+    GuiControl, Hide, SPA
+    GuiControl, Hide, SPR
+    GuiControl, Hide, SPE
+    GuiControl, Hide, SPD
+    GuiControl, Hide, SPASR
+    GuiControl, Hide, SPAAC
+    GuiControl, Hide, SPAAL
+    GuiControl, Hide, 3button
 Return
 test2:
     GuiControl, Hide, Button
@@ -363,6 +415,20 @@ test2:
     GuiControl, Hide, TASR
     GuiControl, Hide, TAAC
     GuiControl, Hide, TAAL
+    GuiControl, Hide, SPTab
+    GuiControl, Hide, vvtext1
+    GuiControl, Hide, vvtext2
+    GuiControl, Hide, vvtext3
+    GuiControl, Hide, vvtext4
+    GuiControl, Hide, vvtext5
+    GuiControl, Hide, SPA
+    GuiControl, Hide, SPR
+    GuiControl, Hide, SPE
+    GuiControl, Hide, SPD
+    GuiControl, Hide, SPASR
+    GuiControl, Hide, SPAAC
+    GuiControl, Hide, SPAAL
+    GuiControl, Hide, 3button
 
     GuiControl, Show, 2Button
     GuiControl, Show, WeightTab
@@ -380,7 +446,57 @@ test2:
     GuiControl, Show, WAAC
     GuiControl, Show, WAAL
 Return
+test3:
+    GuiControl, Hide, 2Button
+    GuiControl, Hide, WeightTab
+    GuiControl, Hide, vtext1
+    GuiControl, Hide, vtext2
+    GuiControl, Hide, vtext3
+    GuiControl, Hide, vtext4
+    GuiControl, Hide, vtext5
+    GuiControl, Hide, WL
+    GuiControl, Hide, WE
+    GuiControl, Hide, WD
+    GuiControl, Hide, WA
+    GuiControl, Hide, WASD
+    GuiControl, Hide, WASR
+    GuiControl, Hide, WAAC
+    GuiControl, Hide, WAAL
+    GuiControl, Hide, Button
+    GuiControl, Hide, TreadmillTab 
+    GuiControl, Hide, TS
+    GuiControl, Hide, TL
+    GuiControl, Hide, TE
+    GuiControl, Hide, TD
+    GuiControl, Hide, TA
+    GuiControl, Hide, text1
+    GuiControl, Hide, text2
+    GuiControl, Hide, text3
+    GuiControl, Hide, text4
+    GuiControl, Hide, text5
+    GuiControl, Hide, text6
+    GuiControl, Hide, TASD
+    GuiControl, Hide, TASS
+    GuiControl, Hide, TASR
+    GuiControl, Hide, TAAC
+    GuiControl, Hide, TAAL
+    
 
+    GuiControl, Show, SPTab
+    GuiControl, Show, vvtext1
+    GuiControl, Show, vvtext2
+    GuiControl, Show, vvtext3
+    GuiControl, Show, vvtext4
+    GuiControl, Show, vvtext5
+    GuiControl, Show, SPA
+    GuiControl, Show, SPR
+    GuiControl, Show, SPE
+    GuiControl, Show, SPD
+    GuiControl, Show, SPASR
+    GuiControl, Show, SPAAC
+    GuiControl, Show, SPAAL
+    GuiControl, Show, 3button
+Return
 Minimize:
     ExitApp
 Return
@@ -415,6 +531,9 @@ Weight1:
     Gui, Submit
     Gui, Destroy
     Goto, w1
+Return
+StartSP:
+
 Return
 StartWeight:
     Gui, Submit
