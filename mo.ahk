@@ -173,7 +173,6 @@ Gui, Add, DropDownList, vTA ,High|Medium|Low
 
 Gui, Add, Text,xm+445 ym+50 vtext6,Advance Options
 
-
 Gui, Add, Checkbox, vTASD ,Stamina Detection
 Gui, Add, Checkbox, vTASS ,Set Start Delay
 Gui, Add, Checkbox, vTASR ,Set Rest Delay
@@ -249,43 +248,12 @@ GuiControl, Choose, SPR, %SPR%
 GuiControl, Choose, SPE, %SPR%
 GuiControl, Choose, SPD, %SPR%
 
-If (SPASR = "ERROR") {
-    SPASR = 0
-}
-If (SPAAC = "ERROR") {
-    SPAAC = 0
-}
-If (SPAAL = "ERROR") {
-    SPAAL = 0
-}
-
-If (WASD = "ERROR") {
-    WASD = 0
-}
-If (WASR = "ERROR") {
-    WASR = 0
-}
-If (WAAC = "ERROR") {
-    WAAC = 0
-} 
-If (WAAL = "ERROR") {
-    WAAL = 0
-}
-
-If (TASD = "ERROR") {
-    TASD = 0
-}
-If (TASS = "ERROR") {
-    TASS = 0
-}
-If (TASR = "ERROR") {
-    TASR = 0
-}
-If (TAAC = "ERROR") {
-    TAAC = 0
-}   
-IF (TAAL = "ERROR") {
-    TAAL = 0
+CheckBox:="SPASR,SPAAC,WASD,WASR,WAAC,WALL,TASD,TASS,TASR,TAAC,TAAL"
+Loop, Parse, CheckBox, `,
+{
+    If (%A_LoopField% = "ERROR") {
+        %A_LoopField% = 0
+    }
 }
     
 ;; adv control
@@ -296,7 +264,6 @@ GuiControl,, TASS, %TASS%
 GuiControl,, TASR, %TASR%
 GuiControl,, TAAC, %TAAC%
 GuiControl,, TAAL, %TAAL%
-
 GuiControl,, WASD, %WASD%
 GuiControl,, WASR, %WASR%
 GuiControl,, WAAC, %WAAC%
@@ -419,24 +386,98 @@ StartSP:
         Saverec2:
         {
             gosub, woo
-            goto, sp2
         }
     }
-    sp2:
     If (WD = "Fatigue Estimate")
     {
-        Gui, Add, Text, y10,How Many Round:
+        Gui, Add, Text, y10,How Many Combo:
         Gui, Add, Edit, ym vRound number,
         Gui, Add, Button, ym gSP3, Done 
         Gui, Show,, Vivace's Macro
         Return
         SP3:
-        Gui, Submit
-        Gui, Destroy
+        {
+            Gui, Submit
+            Gui, Destroy
+        }   
     }
     ;; Sp Macro
+    gosub, CheckSP
+    Send {BackSpace}{Click, Right}
+    Sleep 100
+    Send 1{Shift}
+    Loop, 
+    {
+        gosub, CheckSP
+        re:
+        ImageSearch,,, 20, 120, 260, 140, *10 %A_WorkingDir%/resource-main/StrikePower/Stamina.bmp
+        If ErrorLevel = 0
+        {
+
+            ;; emergency
+            ;; check food
+            ;; check combat
+
+            Send {Space}{w up}
+            Sleep 100
+            Send w{w down}{up}
+            tooltip, aa
+            Sleep 3000
+            Timer:=A_TickCount
+            Loop, 
+            {
+                TimerCheck:=A_TickCount-Timer
+                If (TimerCheck > 60000) ; over 1 minute run
+                {
+                    MsgBox, Run too long 
+                    ExitApp
+                }
+                PixelSearch,,, 200, 130, 201, 131, 0x3A3A3A, 40, Fast ;enough stamina for sp gain
+                If ErrorLevel = 0 
+                {
+                    Send {w up}
+                    Break
+                }
+                ImageSearch,,, 20, 120, 260, 140, *10 %A_WorkingDir%/resource-main/StrikePower/Stamina.bmp
+                if ErrorLevel = 0 
+                {
+                    goto, re
+                }
+            }
+            If ;; rhythm = 1
+            {
+                Send r
+            }
+        } else {
+            Click, 50
+            Click, Right
+            Round++
+        }
+
+        ;; food check
+
+    }
     
-    
+Return
+CheckSP:
+    if WinExist("Ahk_exe RobloxPlayerBeta.exe")
+    {
+        WinActivate
+        WinGetPos,,,W,H,A
+        If ((W >= A_ScreenWidth ) & (H >= A_ScreenHeight))
+        {
+            Send {F11}
+            Sleep 100
+        }
+        if ((W > 816) & ( H > 638))
+        {
+            WinMove, Ahk_exe RobloxPlayerBeta.exe,,,, 800, 599 
+        }
+        
+    } else {
+        MsgBox,,Vivace's Macro,Roblox not active,3
+        ExitApp
+    }
 Return
 StartWeight:
     Gui, Submit
@@ -1227,8 +1268,7 @@ SaveRec1:
     gosub, woo
     goto, w2
 Return
-SaveRec2:
-    
+
 HELLO: 
     Gui, Submit
     Gui, Destroy
@@ -1275,4 +1315,4 @@ GetUrlStatus( URL, Timeout = -1 )
 
     Return, WinHttpReq.Status()
 }
-space::ExitApp
+$space::ExitApp
