@@ -181,9 +181,7 @@ StartTread:
     IniWrite, %TASR%, settings.ini, AdvTreadmill, TASR
     IniWrite, %TAAC%, settings.ini, AdvTreadmill, TAAC
     IniWrite, %TAAL%, settings.ini, AdvTreadmill, TAAL
-    Eatingtype = 1
-    If (TD = "Fatigue Estimate") ;; asking for round 
-    {
+    If (TD = "Fatigue Estimate") {
         Gui, Add, Text, y10,How Many Round:
         Gui, Add, Edit, ym vRound number,
         Gui, Add, Button, ym gtd, Done 
@@ -263,7 +261,6 @@ StartTread:
         TASRV = 9000
     }
     Skip5:
-    Dir:=A_WorkingDir
     #Include, %A_WorkingDir%\resource-main\include\treadmill.ahk
 
 Return
@@ -272,7 +269,80 @@ StartSP:
 
 Return
 StartWeight:
-
+    Gui, Submit
+    Gui, Destroy
+    IniWrite, %WL%, settings.ini, Weight, WL
+    IniWrite, %WE%, settings.ini, Weight, WE
+    IniWrite, %WD%, settings.ini, Weight, WD
+    IniWrite, %WA%, settings.ini, Weight, WA
+    IniWrite, %WASD%, settings.ini, AdvWeight, WASD
+    IniWrite, %WASR%, settings.ini, AdvWeight, WASR
+    IniWrite, %WAAC%, settings.ini, AdvWeight, WAAC
+    IniWrite, %WAAL%, settings.ini, AdvWeight, WAAL
+    If (WD = "Fatigue Estimate") {
+        Gui, Add, Text, y10, How Many Round:
+        Gui, Add, Edit, ym vRound number,
+        Gui, Add, Button, ym, gwd, Done
+        Gui, Show,, Vivace's Macro
+        Return
+        wd:
+        {
+            Gui, Submit
+            Gui, Destroy
+            Goto, Skipw
+        }
+        Return
+    }
+    Skipw:
+    If (WAAC = 1) {
+        IniRead, KeyCombo, settings.ini, Record, RECKEY
+        IniRead, List, settings.ini, Record, RECTYPE
+        if (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
+            Gui, Add, Text, y10,Record Key:
+            Gui, Add, DDL, +Theme ym vKeyCombo , Win+Alt+G|F8|F12
+            Gui, Add, Button, ym gLekkerw, Done
+            Gui, Add, Text, xm,Record Type:
+            Gui, Add, DDL, +Theme x79 y30 vList, Record|ShadowPlay
+            Gui, Show,, Vivace's Macro
+            Return
+        }
+        Lekkerw:
+        {
+            Gui, Submit
+            Gui, Destroy
+            If (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
+                msgbox,,Vivace's Macro,You have incomplete information.
+                ExitApp
+            }
+            if ((KeyCombo = "F8") or (KeyCombo = "F12")) {
+                IniWrite, {%KeyCombo%}, settings.ini, Record, RECKEY
+            } else if (KeyCombo = "Win+Alt+G") {
+                IniWrite, #!g, settings.ini, Record, RECKEY
+            }
+            IniWrite, %List%, settings.ini, Record, RECTYPE
+            Goto, Skipw1
+        }
+        Return
+    }
+    Skipw1:
+    If (WASR = 1) {
+        Gui, Add, Text, y10,Rest Delay Enabled:
+        Gui, Add, Edit, Number ym vTASRV,
+        Gui, Add, Button, ym gswasrv, Done
+        Gui, Show,, Vivace's Macro
+        Return
+        swasrv:
+        {
+            Gui, Submit
+            Gui, Destroy
+            Goto, Skipw2
+        }
+        Return
+    } else {
+        WASRV = 9000
+    }
+    Skipw2:
+    #Include, %A_WorkingDir%\resource-main\include\weight.ahk
 Return
 ;; function
 

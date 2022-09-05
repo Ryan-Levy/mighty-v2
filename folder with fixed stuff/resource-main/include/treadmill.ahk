@@ -129,7 +129,7 @@ Loop,
     ; combat search
     ; auto log for round
 }
-
+Return
 WaitTreadmill:
     If (TASR = "0") {
         DefaultWait:=9000
