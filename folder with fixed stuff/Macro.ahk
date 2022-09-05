@@ -14,6 +14,7 @@ CoordMode, Mouse, Window
 OnMessage(0x201, "WM_LBUTTONDOWN")
 ;;
 #Include,  %A_WorkingDir%/resource-main/function.ahk
+Start2:
 #Include, %A_WorkingDir%/resource-main/Gui.ahk
 Start:
 
@@ -266,6 +267,8 @@ StartTread:
 Return
 
 StartSP:
+    Gui, Submit
+    Gui, Destroy
 
 Return
 StartWeight:

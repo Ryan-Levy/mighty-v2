@@ -22,3 +22,46 @@ sendsc(keyspe) {
     thatkey := format("sc{:x}", getKeySC(keyspe))
     send {%thatkey%}
 }
+Goto, Start2
+Return
+y:
+{
+    if (%A_LoopField% = 6) {
+        y = 400
+    }
+    if (%A_LoopField% = 5) {
+        y = 370
+    }
+    if (%A_LoopField% = 4) {
+        y = 340
+    }
+    if (%A_LoopField% = 3) {
+        y = 280
+    }
+    if (%A_LoopField% = 2) {
+        y = 250
+    }
+    if (%A_LoopField% = 1) {
+        y = 220
+    }
+}
+Return
+
+Check:
+{
+    if WinExist("Ahk_exe RobloxPlayerBeta.exe") {
+        WinActivate
+        WinGetPos,,,W,H,A
+        If ((W >= A_ScreenWidth ) & (H >= A_ScreenHeight)) {
+            Send {F11}
+            Sleep 100
+        }
+        if ((W > 816) & ( H > 638)) {
+            WinMove, Ahk_exe RobloxPlayerBeta.exe,,,, 800, 599 
+        }
+    } else {
+        MsgBox,,Vivace's Macro,Roblox not active,3
+        ExitApp
+    }
+}   
+Return

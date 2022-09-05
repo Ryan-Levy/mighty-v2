@@ -153,25 +153,7 @@ WaitTreadmill:
         }
     }
 Return
-y:
-{
-    if (%A_LoopField% = 5) {
-        y = 370
-    }
-    if (%A_LoopField% = 4) {
-        y = 340
-    }
-    if (%A_LoopField% = 3) {
-        y = 280
-    }
-    if (%A_LoopField% = 2) {
-        y = 250
-    }
-    if (%A_LoopField% = 1) {
-        y = 220
-    }
-}
-Return
+
 AutoEat:
 {
     Slot:="1,2,3,4,5,6,7,8,9,0"
@@ -234,24 +216,7 @@ Return
 
 
 
-Check:
-{
-    if WinExist("Ahk_exe RobloxPlayerBeta.exe") {
-        WinActivate
-        WinGetPos,,,W,H,A
-        If ((W >= A_ScreenWidth ) & (H >= A_ScreenHeight)) {
-            Send {F11}
-            Sleep 100
-        }
-        if ((W > 816) & ( H > 638)) {
-            WinMove, Ahk_exe RobloxPlayerBeta.exe,,,, 800, 599 
-        }
-    } else {
-        MsgBox,,Vivace's Macro,Roblox not active,3
-        ExitApp
-    }
-}   
-Return
+
 
 
 RecordUsername:
@@ -293,10 +258,9 @@ Return
 
 Waitforcombat:
 {
-    Send,
     Loop,
     {
-        ImageSearch,,, ;; Some pos to find later , resource-main\Common use\combat.bmp
+        ;ImageSearch,,, ;; Some pos to find later , resource-main\Common use\combat.bmp
         If (ErrorLevel = 1) {
 
         }
