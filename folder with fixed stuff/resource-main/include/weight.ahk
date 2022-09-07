@@ -101,30 +101,4 @@ Loop,
     }
 }
 Return
-WaitWeight:
-{
-    If (WASR = "0") {
-        DefaultWait:=9000
-    }
-    If (WASR = "1") {
-        DefaultWait:=WASR
-    }
-    TimerSleep := A_TickCount
-    Loop,
-    {
-        TaskSleep := A_TickCount - TimerSleep
-        TaskTimer := A_TickCount - WeightTask
-        Tooltip, %TaskSleep% %TaskTimer%
-        If (TaskSleep > DefaultWait) {
-            Break
-        }
-        If (TaskTimer > 65000) {
-            Break
-        }
-        If (TaskTimer > 55000) {
-            Click, 400, 391
-        }
-    }
-}
-Return
 

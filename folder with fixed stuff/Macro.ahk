@@ -37,24 +37,22 @@ if !FileExist("resource-main") { ;download image resource
 ;; Check for webhook 
 IniRead, Webhook, settings.ini, Notifications, Webhook
 IniRead, UserID, settings.ini, Notifications, UserID
+
 if ((Webhook = "ERROR") or (UserID = "ERROR") or (UserID = "<@>") or (Webhook = "") or (UserID = "")) {
     Gui, Add, Text, y10,Webhook:  
     Gui, Add, Edit,  ym vWebhook ,
     Gui, Add, Button, ym gSubmitWebhook, Done
-    Gui, Add, Button, ym gnowebhook, NO
+    Gui, Add, Button, ym gLnowebhook, NO
     Gui, Add, Text, xm,UserID:
     Gui, Add, Edit, x70 y30 Number vUserID, 
     Gui, Show,, Vivace's Macro
     Return
-    nowebhook:
-    {
+    Lnowebhook:
         Gui, Destroy
         Webhook = false
-        Goto, Skip1
-    }
+        Gosub, Skip1
     Return
     SubmitWebhook:
-    {
         Gui, Submit
         Gui, Destroy
         Webhook = true
@@ -84,13 +82,11 @@ if ((Webhook = "ERROR") or (UserID = "ERROR") or (UserID = "<@>") or (Webhook = 
                 IniWrite, <@%UserID%>, settings.ini, Notifications, UserID
             }
         }
-        Goto, Skip1
-    }
+        Gosub, Skip1
     Return
 }
 Skip1:
 ;; Start Read Saved Data from settings.ini
-
 ;;Treadmill
 ; TS  = Treadmill Training
 ; TL = Treadmill Level
@@ -134,6 +130,40 @@ IniRead, WASD, settings.ini, AdvWeight, WASD
 IniRead, WASR, settings.ini, AdvWeight, WASR
 IniRead, WAAC, settings.ini, AdvWeight, WAAC
 IniRead, WAAL, settings.ini, AdvWeight, WAAL
+
+;;STRIKEPOWER
+; SPR = Strike Power Ryhthm Options
+; SPA = Stamina Amount
+; SPD = Duration
+; SPE = Eat options
+IniRead, SPR, settings.ini, StrikePower, SPR
+IniRead, SPA, settings.ini, StrikePower, SPA
+IniRead, SPD, settings.ini, StrikePower, SPD
+IniRead, SPE, settings.ini, StrikePower, SPE
+
+;; AdvStrikePower
+; SPASR = Set Rest Delay
+; SPAAC = Auto Clip
+; SPAAL = Auto Leave
+IniRead, SPASR, settings.ini, AdvStrikePower, SPASR
+IniRead, SPAAC, settings.ini, AdvStrikePower, SPAAC
+IniRead, SPAAL, settings.ini, AdvStrikePower, SPAAL
+
+
+;;STRIKESPEED
+; SSE = Eat options
+; SSD = Duration
+IniRead, SSE, settings.ini, StrikeSpeed, SSE
+IniRead, SSD, settings.ini, StrikeSpeed, SSD
+
+;; AdvStrikeSpeed
+; SSALT = Log Training
+; SSAAC = Auto Clip
+; SSAAL = Auto Leave
+IniRead, SSALT, settings.ini, AdvStrikeSpeed, SSALT
+IniRead, SSAAC, settings.ini, AdvStrikeSpeed, SSAAC
+IniRead, SSAAL, settings.ini, AdvStrikeSpeed, SSAAL
+
 ;; finish load
 goto, run ;; run gui
 loadsave:
@@ -143,7 +173,7 @@ loadsave:
         GuiControl, Hide, %A_LoopField%
     }
     ;; load saved ddl
-    CheckBox:="SPASR,SPAAC,WASD,WASR,WAAC,WALL,TASD,TASS,TASR,TAAC,TAAL"
+    CheckBox:="SPASR,SPAAC,WASD,WASR,WAAC,WAAL,TASD,TASS,TASR,TAAC,TAAL"
     Loop, Parse, CheckBox, `,
     {
         If (%A_LoopField% = "ERROR") {
@@ -156,6 +186,7 @@ loadsave:
     GuiControl,, TASR, %TASR%
     GuiControl,, TAAC, %TAAC%
     GuiControl,, TAAL, %TAAL%
+
     GuiControl,, WASD, %WASD%
     GuiControl,, WASR, %WASR%
     GuiControl,, WAAC, %WAAC%
@@ -274,13 +305,12 @@ StartTread:
     }
     Skip5:
     #Include, %A_WorkingDir%\resource-main\include\treadmill.ahk
-
 Return
 
 StartSP:
     Gui, Submit
     Gui, Destroy
-
+    IniWrite, %%
 Return
 StartWeight:
     Gui, Submit
