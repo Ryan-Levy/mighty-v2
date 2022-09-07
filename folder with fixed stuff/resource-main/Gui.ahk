@@ -96,7 +96,8 @@ Minimize:
     ExitApp
 Return
 copy:
-    Run, https://discord.com/invite/4rxfjtnMGt
+    Run, discord://discord.com/invite/4rxfjtnMGt
+    Clipboard := "https://discord.com/invite/4rxfjtnMGt"
 Return
 git:
     Run, https://github.com/Cweamy/Mighty-Omega-Macro

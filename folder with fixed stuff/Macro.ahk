@@ -12,14 +12,15 @@ CoordMode, Pixel, Window
 CoordMode, Mouse, Window
 ;; Drag gui
 OnMessage(0x201, "WM_LBUTTONDOWN")
-;;
-#Include,  %A_WorkingDir%/resource-main/function.ahk
+;; idk why i don't move this down instead making it go subordinate 
+#Include,  %A_WorkingDir%/resource-main/function.ahk 
 Start2:
 #Include, %A_WorkingDir%/resource-main/Gui.ahk
 Start:
 
 If (A_ScreenDPI != 96) { ;; checking scale and layout
     MsgBox,	16,Vivace's Macro, Your Scale `& layout settings need to be on 100`%
+    ;; might add a option that ask if you want to use 100% scale
     ExitApp
 }
 
@@ -40,14 +41,23 @@ if ((Webhook = "ERROR") or (UserID = "ERROR") or (UserID = "<@>") or (Webhook = 
     Gui, Add, Text, y10,Webhook:  
     Gui, Add, Edit,  ym vWebhook ,
     Gui, Add, Button, ym gSubmitWebhook, Done
+    Gui, Add, Button, ym gnowebhook, NO
     Gui, Add, Text, xm,UserID:
     Gui, Add, Edit, x70 y30 Number vUserID, 
     Gui, Show,, Vivace's Macro
+    Return
+    nowebhook:
+    {
+        Gui, Destroy
+        Webhook = false
+        Goto, Skip1
+    }
     Return
     SubmitWebhook:
     {
         Gui, Submit
         Gui, Destroy
+        Webhook = true
         test:=GetUrlStatus(Webhook, 10)		; 200
         If (test = "") {
             MsgBox, 16, Vivace's Macro, Invalid link
@@ -69,10 +79,11 @@ if ((Webhook = "ERROR") or (UserID = "ERROR") or (UserID = "<@>") or (Webhook = 
             {
                 Reload
                 ExitApp
+            } else {
+                IniWrite, %Webhook%, settings.ini, Notifications, Webhook
+                IniWrite, <@%UserID%>, settings.ini, Notifications, UserID
             }
-            IniWrite, %Webhook%, settings.ini, Notifications, Webhook
         }
-        IniWrite, <@%UserID%>, settings.ini, Notifications, UserID
         Goto, Skip1
     }
     Return

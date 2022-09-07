@@ -1,5 +1,3 @@
-
-
 Loop,
 {
     Gosub, Check
@@ -8,7 +6,7 @@ Loop,
         If (ErrorLevel = 0) {
             Click, 400, 455 ; Leave weight
             Sleep 1000
-            Gosub, AutoEat
+            Gosub, AutoEatWeight
             Send {BackSpace}
             Sleep 200
             UpWeight := A_TickCount
