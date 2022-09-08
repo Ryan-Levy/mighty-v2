@@ -84,6 +84,14 @@ if ((Webhook = "ERROR") or (UserID = "ERROR") or (UserID = "<@>") or (Webhook = 
         }
         Gosub, Skip1
     Return
+} else {
+    Webhook = True
+    req := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+    req.Open("POST", webhook, true)
+    req.SetRequestHeader("Content-Type", "application/json")
+
+    ;;req.send(DiscordSend("tessstwoord",ping))
+
 }
 Skip1:
 ;; Start Read Saved Data from settings.ini

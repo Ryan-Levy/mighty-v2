@@ -48,7 +48,7 @@ Loop,
                 {
                     ImageSearch,,, 390, 240, 430, 390, resource-main\treadmill\level%A_LoopField%.bmp
                     If (ErrorLevel = 0) {
-                        gosub, y
+                        y:=y(A_LoopField)
                         Click, 470, %y%, 10
                     }
                 }
@@ -59,7 +59,7 @@ Loop,
                 Loop, Parse, levell, `,
                 {
                     If (TL = %A_LoopField%) {
-                        gosub, y
+                        y:=y(A_LoopField)
                         Click, 470, %y%, 10
                     }
                 }

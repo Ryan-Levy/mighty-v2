@@ -22,33 +22,30 @@ sendsc(keyspe) {
     thatkey := format("sc{:x}", getKeySC(keyspe))
     send {%thatkey%}
 }
-
-Goto, Start2
-Return
-y:
-{
-    if (%A_LoopField% = 6) {
+DiscordSend(m,p) {
+    postdata={"username":"i love vivace's macro","content":"%p% %m%"}
+    return postdata
+}
+y(var) {
+    if (var = 6) {
         y = 400
-    }
-    if (%A_LoopField% = 5) {
+    } else if (var = 5) {
         y = 370
-    }
-    if (%A_LoopField% = 4) {
+    } else if (var = 4) {
         y = 340
-    }
-    if (%A_LoopField% = 3) {
+    } else if (var = 3) {
         y = 280
-    }
-    if (%A_LoopField% = 2) {
+    } else if (var = 2) {
         y = 250
-    }
-    if (%A_LoopField% = 1) {
+    } else if (var = 1) {
         y = 220
     }
+    return y
 }
+Goto, Start2
 Return
+
 AutoEatWeight:
-{
     If (WE = "Food") {
         Slot:="1,2,3,4,5,6,7,8,9,0"
     } else if (WE = "Food+Protein") {
@@ -106,10 +103,8 @@ AutoEatWeight:
         Sleep 300
         Gosub, AutoEatWeight
     } ;; doesn't have slot eat for weight
-}
 Return
 AutoEatTread:
-{
     Slot:="1,2,3,4,5,6,7,8,9,0"
     Loop, Parse, Slot, `,
     {
@@ -165,7 +160,6 @@ AutoEatTread:
     sendsc("``") 
     Sleep 300
     Gosub, AutoEatTread
-}
 Return
 Check:
     if WinExist("Ahk_exe RobloxPlayerBeta.exe") {
