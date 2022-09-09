@@ -138,17 +138,25 @@ Waitforcombat:
 
         }
         ;; Auto Run
-        arr := ["left", "right", "Dash Left", "Dash Right"] ;; random run array
-        Random, oVar, 1, 4
-        If (arr[oVar] = arr[left]) {
-            Send {Left, Down}
-            Sleep 25000
-            Send {Left, Up}
-        } else If (arr[oVar] = arr[right]) {
-            Send {Right, Down}
-            Sleep 25000
-            Send {Right, Up}
+        If (ErrorLevel = 1) { ;; if stam enough
+            arr := ["left", "right", "Dash Left", "Dash Right", "Dash Foward", "left run", "right run", "dash forward"] ;; random run array
+            Random, oVar, 1, 8
+
+            If (arr[oVar] = arr[left run]) {
+                Send {Left, Down}
+                Sleep 2000
+                Send {Left, Up}
+            } else If (arr[oVar] = arr[right run]) {
+                Send {Right, Down}
+                Sleep 2000
+                Send {Right, Up}
+            }
+        } else if (ErrorLevel = 0) { ;; if low stam walk
+
         }
+        
+
+
 
     }
     
