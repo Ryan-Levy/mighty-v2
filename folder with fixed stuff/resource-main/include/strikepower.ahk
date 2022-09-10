@@ -55,6 +55,9 @@ Loop,
              
         }
     }
+    ;; low stam
+
+    
     ;; Autoeat
     If (SPE != "None") {
         PixelSearch,,, 55, 145, 56, 145, 0x3A3A3A, 40, Fast ; Hungry

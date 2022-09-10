@@ -1,8 +1,9 @@
-f1::
+CoordMode, Mouse, Window
 
-SetMouseDelay, 5
-RECTYPE = "Record"
-RECKEY = "{F12}"
+f1::
+    SetMouseDelay, 5
+    RECTYPE = "Record"
+    RECKEY = "{F12}"
 
     Send {o down}
     Sleep 1000
@@ -18,42 +19,32 @@ RECKEY = "{F12}"
     }
     
     MouseMove, 765, 125
+    
     Loop, 10
     {
         Click, WheelUp 10
         Sleep 100
     }
-    vale = 105
-    vald = 540
-    Loop,
+
+    vale = 108
+    Loop, 14
     {
-        ImageSearch,, y, 730, %vale%, 740, %vald%, *50 name.png
-        If (ErrorLevel = 0) {
-            y:=y+14
-            MouseMove, 730, %y%
-            vale:=vale+y+14
-            Sleep 300
-        } else If (ErrorLevel = 1) {
-            Break
-        }
+        y:=vale+14
+        MouseMove, 765, %y%
+        vale:=vale+31
+        Sleep 150
     }
-    
+
     Click, 805, 160, Down
     Click, 805, 285, Up
 
-    MouseMove, 765, 125
-    vale = 105
-    Loop,
+    vale = 108
+    Loop, 14
     {
-        ImageSearch,, y, 730, %vale%, 740, %vald%, *50 name.png
-        If (ErrorLevel = 0) {
-            y:=y+14
-            MouseMove, 730, %y%
-            vale:=vale+y+14
-            Sleep 300
-        } else If (ErrorLevel = 1) {
-            Break
-        }
+        y:=vale+14
+        MouseMove, 765, %y%
+        vale:=vale+31
+        Sleep 150
     }
 
     If (RECTYPE = "Record") {

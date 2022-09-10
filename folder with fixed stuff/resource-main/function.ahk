@@ -22,22 +22,6 @@ sendsc(keyspe) {
     thatkey := format("sc{:x}", getKeySC(keyspe))
     send {%thatkey%}
 }
-runfunction(direction) {
-    if (direction = 1) { ; left
-        sc("w", 2)sc("w", 3)sc("w", 1)
-        send {left down}
-        sleep 2000
-        send {left up}
-        sc("w", 2)
-    } else if (direction = 2) { ; right
-        sc("w", 2)sc("w", 3)sc("w", 1)
-        send {right down}
-        sleep 2000
-        send {right up}
-        sc("w", 2)
-    }
-    Sleep 100
-}
 dash(direction) {
     if (direction = 1) { ;; 4 direction
         sc("w", 1)
@@ -59,6 +43,23 @@ dash(direction) {
     }
     Sleep 300
 }
+runfunction(direction) {
+    if (direction = 1) { ; left
+        sc("w", 2)sc("w", 3)sc("w", 1)
+        send {left down}
+        sleep 2000
+        send {left up}
+        sc("w", 2)
+    } else if (direction = 2) { ; right
+        sc("w", 2)sc("w", 3)sc("w", 1)
+        send {right down}
+        sleep 2000
+        send {right up}
+        sc("w", 2)
+    }
+    Sleep 100
+}
+
 siderunfunction(direction) {
     If (direction = 1) { ; a key
         sc("w", 2)sc("w", 3)sc("w", 1)sc("a", 1)
@@ -102,6 +103,35 @@ y(var) {
         y = 220
     }
     return y
+}
+walkfunction(direction) {
+    if (direction = 1) { ; left
+        sc("w", 2)sc("w", 1)
+        send {left down}
+        sleep 2000
+        send {left up}
+        sc("w", 2)
+    } else if (direction = 2) { ; right
+        sc("w", 2)sc("w", 1)
+        send {right down}
+        sleep 2000
+        send {right up}
+        sc("w", 2)
+    }
+    Sleep 100
+}
+sidewalkfunction(direction) {
+    If (direction = 1) { ; a key
+        sc("w", 2)sc("a", 1)
+        sleep 1000
+        sc("a", 2)
+    } else If (direction = 2) {
+        sc("w", 2)sc("d", 1)
+        send, {up}
+        sleep 1000
+        sc("d", 2)
+    }
+    Sleep 100
 }
 Goto, Start2
 Return
@@ -378,12 +408,10 @@ AutoEatSP:
     Sleep 300
     Gosub, AutoEatSP
 Return
-Combat:
-
+Combat1:
     ;; Half HP
     Loop,
     {
-        ;arr := ["runturn","dash"] ;; random run array
         Random, oVar, 1, 2
         If (oVar = 1) {
             Random, oVar, 1, 2
@@ -400,5 +428,25 @@ Combat:
         }
         ; ImageSearch ;; for combat
     } ;Until ErrorLevel = 1
-
 return
+Combat2:
+    ;; Half HP
+    Loop,
+    {
+        Random, oVar, 1, 2
+        If (oVar = 1) {
+            Random, oVar, 1, 2
+            If (oVar = 2) {
+                Random, oVar, 1, 2
+                sidewalkfunction(oVar)
+            } else if (oVar = 1) {
+                Random, oVar, 1, 2
+                walkfunction(oVar)
+            } 
+        } else If (oVar = 2) {
+            Random, oVar, 1, 4
+            dash(oVar)
+        }
+        ; ImageSearch ;; for combat
+    } ;Until ErrorLevel = 1
+Return
