@@ -1,6 +1,4 @@
-﻿goto, Start
-Return
-
+﻿
 run:
     Gui, -Caption
     Gui, +AlwaysOnTop

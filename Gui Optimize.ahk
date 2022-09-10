@@ -14,7 +14,6 @@ CoordMode, Mouse, Window
 OnMessage(0x201, "WM_LBUTTONDOWN")
 ;;
 #Include, Gui.ahk
-Start:
 
 If (A_ScreenDPI != 96) { ;; checking scale and layout
     MsgBox,	16,Vivace's Macro, Your Scale `& layout settings need to be on 100`%

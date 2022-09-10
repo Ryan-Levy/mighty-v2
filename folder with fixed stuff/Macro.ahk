@@ -13,10 +13,7 @@ CoordMode, Mouse, Window
 ;; Drag gui
 OnMessage(0x201, "WM_LBUTTONDOWN")
 ;; idk why i don't move this down instead making it go subordinate 
-#Include,  %A_WorkingDir%/resource-main/function.ahk 
-Start2:
-#Include, %A_WorkingDir%/resource-main/Gui.ahk
-Start:
+
 
 If (A_ScreenDPI != 96) { ;; checking scale and layout
     MsgBox,	16,Vivace's Macro, Your Scale `& layout settings need to be on 100`%
@@ -222,6 +219,7 @@ Return
 StartTread:
     Gui, Submit
     Gui, Destroy
+    Tooltip, 1
     IniWrite, %TS%, settings.ini, Treadmill, TS
     IniWrite, %TL%, settings.ini, Treadmill, TL
     IniWrite, %TE%, settings.ini, Treadmill, TE
@@ -247,6 +245,7 @@ StartTread:
         Return
     }
     Skip2:
+    Tooltip, 2
     If (TAAC = 1) {
         IniRead, KeyCombo, settings.ini, Record, RECKEY
         IniRead, List, settings.ini, Record, RECTYPE
@@ -276,49 +275,44 @@ StartTread:
             Goto, Skip3
         }
         Return
+    } else {
+        Goto, Skip3
     }
+
     Skip3:
+    Tooltip, 3
     If (TASS = 1) {
         Gui, Add, Text, y10,Start Delay Enabled:
         Gui, Add, Edit, Number ym vTASS,
-        Gui, Add, Button, ym gstass, Done
+        Gui, Add, Button, ym gstacss, Done
         Gui, Show,, Vivace's Macro
-        Return
-        stass:
-        {
-            Gui, Submit
-            Gui, Destroy
-            Goto, Skip4
-        }
         Return
     } else {
         TASSV = 0
+        Goto, Skip4
     }
+    
     Skip4:
+    Tooltip, 4
     If (TASR = 1) {
         Gui, Add, Text, y10,Rest Delay Enabled:
         Gui, Add, Edit, Number ym vTASRV,
         Gui, Add, Button, ym gstasrv, Done
         Gui, Show,, Vivace's Macro
         Return
-        stasrv:
-        {
-            Gui, Submit
-            Gui, Destroy
-            Goto, Skip5
-        }
-        Return
     } else {
         TASRV = 9000
+        Goto, Skip5
     }
     Skip5:
-    #Include, %A_WorkingDir%\resource-main\include\treadmill.ahk
+    Tooltip, 5
+    Goto, TreadmillStart
 Return
 
 StartSP:
     Gui, Submit
     Gui, Destroy
-    IniWrite, %%
+
 Return
 StartWeight:
     Gui, Submit
@@ -397,6 +391,9 @@ StartWeight:
     #Include, %A_WorkingDir%\resource-main\include\weight.ahk
 Return
 ;; function
-
-
-$space::ExitApp
+#Include,  %A_WorkingDir%/resource-main/function.ahk 
+#Include, %A_WorkingDir%/resource-main/Gui.ahk
+#Include, %A_WorkingDir%\resource-main\include\treadmill.ahk
+$l::ExitApp
+$k::Pause
+$j::Reload

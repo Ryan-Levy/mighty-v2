@@ -1,3 +1,8 @@
+
+TreadmillStart:
+CoordMode, Tooltip, Window
+Tooltip, J Reload K Pause L Exit, 650, 550, 2
+ToolTip, Started Treadmill, 650, 600
 Loop,
 {
     Gosub, Check
@@ -19,11 +24,14 @@ Loop,
     }
     ImageSearch,,, 20, 120, 260, 140, *10 %A_WorkingDir%\resource-main\treadmill\Stamina.bmp
     If (ErrorLevel = 0) { ;; found stamina bar
+        Tooltip, Found Stam, 650, 600
+        Sleep 100
         If (TS = "Stamina") {
             Click, 290, 310, 20
         } else If (TS = "RunningSpeed") {
             Click, 520, 310, 20
         }
+        Tooltip, Clicked Level, 650, 600
         Color:="0x5A5A5A,0x98FF79"
         wait := A_TickCount
         Loop,
@@ -40,27 +48,37 @@ Loop,
             }
         } Until (A_TickCount - wait > 3000)
         Sleep 300 ;; forwat ^^^
+        MouseMove, 0, 100,, R
         PixelSearch,,, 410, 355, 411, 356, 0x98FF79, 30, Fast
         If (ErrorLevel = 1) { ;; If hand isn't in middle
-            levell = "1,2,3,4,5"
+            levell:="5,4,3,2,1"
             If (TL = "Auto") {
                 Loop, Parse, levell, `,
                 {
-                    ImageSearch,,, 390, 240, 430, 390, resource-main\treadmill\level%A_LoopField%.bmp
+                    ToolTip, Search For %A_LoopField%, 650, 600
+                    Sleep 100
+                    ImageSearch,,, 390, 240, 430, 390, *Trans0x5A5A5A *13 resource-main\treadmill\level%A_LoopField%.bmp
                     If (ErrorLevel = 0) {
                         y:=y(A_LoopField)
+                        Tooltip, Choose %A_LoopField%, 650, 600
                         Click, 470, %y%, 10
+                        Break
+                    } else If (ErrorLevel = 1) {
+                        If (A_Index = 5) {
+                            MsgBox, Not Found ;; Send Webhook and stop
+                        }
                     }
                 }
-                If (ErrorLevel = 1) { ;; Not Found Anything
-                    ;; Send Webhook and stop
-                }
-            } else {
+            } else If ((TL = "5") or (TL = "4") or (TL = "3") or (TL = "2") or (TL = "1")) {
                 Loop, Parse, levell, `,
                 {
-                    If (TL = %A_LoopField%) {
+                    If (TL = A_LoopField) {
                         y:=y(A_LoopField)
+                        tooltip, y = %y%, 650,600
                         Click, 470, %y%, 10
+                        Tooltip, Choose %A_LoopField%, 650, 600
+                        Sleep 100
+                        Break
                     }
                 }
             }
@@ -79,6 +97,7 @@ Loop,
                 ExitApp
             }
         }
+        Tooltip, Clicked Hand, 650, 600
         Sleep 3000
         button := "w,a,s,d"
         TreadmillTask := A_TickCount
@@ -92,7 +111,9 @@ Loop,
             {
                 ImageSearch,,, 200, 240, 600, 300, *50 %A_WorkingDir%\resource-main\treadmill\%A_LoopField%.bmp
                 If (ErrorLevel = 0) {
-                    sendsc("%A_LoopField%")
+                    Tooltip, Send %A_LoopField%, 650, 600
+                    keytread:=A_LoopField
+                    sc(keytread, 3)
                     Break
                 }
             }
@@ -122,43 +143,20 @@ Loop,
             }
         }
     }
-    ; combat search
+    ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+    If (ErrorLevel = 0) {
+        If (TAAC = 1) {
+            Gosub, RecordUsername
+        }
+        Gosub, Waitforcombat
+    }
     ; auto log for round
+    If (TD = "Fatigue Estimate") {
+        vRound++
+        If (Round = vRound) {
+            MsgBox, LOGGED
+        }
+    }
 }
 Return
-
-
-
-Waitforcombat:
-{
-    Loop,
-    {
-        ;ImageSearch,,, ;; Some pos to find later , resource-main\Common use\combat.bmp
-        If (ErrorLevel = 1) {
-
-        }
-        ;; Auto Run
-        If (ErrorLevel = 1) { ;; if stam enough
-            arr := ["left", "right", "Dash Left", "Dash Right", "Dash Foward", "left run", "right run", "dash forward"] ;; random run array
-            Random, oVar, 1, 8
-
-            If (arr[oVar] = arr[left run]) {
-                Send {Left, Down}
-                Sleep 2000
-                Send {Left, Up}
-            } else If (arr[oVar] = arr[right run]) {
-                Send {Right, Down}
-                Sleep 2000
-                Send {Right, Up}
-            }
-        } else if (ErrorLevel = 0) { ;; if low stam walk
-
-        }
-        
-
-
-
-    }
-    
-}
 

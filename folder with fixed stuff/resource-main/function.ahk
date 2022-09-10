@@ -22,68 +22,7 @@ sendsc(keyspe) {
     thatkey := format("sc{:x}", getKeySC(keyspe))
     send {%thatkey%}
 }
-dash(direction) {
-    if (direction = 1) { ;; 4 direction
-        sc("w", 1)
-    } else if (direction = 2) { 
-        sc("a", 1)
-    } else if (direction = 3) { 
-        sc("d", 1)
-    } else if (direction = 4) { 
-        sc("s", 1)
-    }
-    Send {space down}
-    Sleep 50
-    sc("q", 3)
-    Send {space up}
-    directionkey:="w,a,s,d"
-    Loop, Parse, directionkey, `,
-    {
-        sc(%A_LoopField%, 2)
-    }
-    Sleep 300
-}
-runfunction(direction) {
-    if (direction = 1) { ; left
-        sc("w", 2)sc("w", 3)sc("w", 1)
-        send {left down}
-        sleep 2000
-        send {left up}
-        sc("w", 2)
-    } else if (direction = 2) { ; right
-        sc("w", 2)sc("w", 3)sc("w", 1)
-        send {right down}
-        sleep 2000
-        send {right up}
-        sc("w", 2)
-    }
-    Sleep 100
-}
 
-siderunfunction(direction) {
-    If (direction = 1) { ; a key
-        sc("w", 2)sc("w", 3)sc("w", 1)sc("a", 1)
-        send, {up}
-        sleep 1000
-        sc("w", 2)sc("a", 2)
-    } else If (direction = 2) {
-        sc("w", 2)sc("w", 3)sc("w", 1)sc("d", 1)
-        send, {up}
-        sleep 1000
-        sc("w", 2)sc("d", 2)
-    }
-    Sleep 100
-}
-sc(key,type) {
-    thatkey := format("sc{:x}", getKeySC(key))
-    if (type = 1) {
-        Send {%thatkey% down}
-    } else if (type = 2) {
-        Send {%thatkey% up}        
-    } else if (type = 3) {
-        send {%thatkey%}
-    }
-}
 DiscordSend(m,p) {
     postdata={"username":"i love vivace's macro","content":"%p% %m%"}
     return postdata
@@ -104,37 +43,95 @@ y(var) {
     }
     return y
 }
-walkfunction(direction) {
+runfunction(direction) {
     if (direction = 1) { ; left
-        sc("w", 2)sc("w", 1)
+        sc("w", 3)sc("w", 1)
         send {left down}
         sleep 2000
         send {left up}
         sc("w", 2)
     } else if (direction = 2) { ; right
-        sc("w", 2)sc("w", 1)
+        sc("w", 3)sc("w", 1)
         send {right down}
         sleep 2000
         send {right up}
         sc("w", 2)
     }
-    Sleep 100
+}
+siderunfunction(direction) {
+    If (direction = 1) { ; a key
+        sc("w", 3)sc("w", 1)sc("a", 1)
+        send, {up}
+        sleep 1000
+        sc("w", 2)sc("a", 2)
+    } else If (direction = 2) {
+        sc("w", 3)sc("w", 1)sc("d", 1)
+        send, {up}
+        sleep 1000
+        sc("w", 2)sc("d", 2)
+    }
+}
+walkfunction(direction) {
+    if (direction = 1) { ; left
+        sc("w", 1)
+        send {left down}
+        sleep 2000
+        send {left up}
+        sc("w", 2)
+    } else if (direction = 2) { ; right
+        sc("w", 1)
+        send {right down}
+        sleep 2000
+        send {right up}
+        sc("w", 2)
+    }
 }
 sidewalkfunction(direction) {
     If (direction = 1) { ; a key
-        sc("w", 2)sc("a", 1)
+        sc("a", 1)
         sleep 1000
         sc("a", 2)
     } else If (direction = 2) {
-        sc("w", 2)sc("d", 1)
-        send, {up}
+        sc("d", 1)
         sleep 1000
         sc("d", 2)
     }
-    Sleep 100
 }
-Goto, Start2
-Return
+
+dash(direction) {
+    if (direction = 1) { ;; 4 direction
+        sc("w", 1)
+    } else if (direction = 2) { 
+        sc("a", 1)
+    } else if (direction = 3) { 
+        sc("d", 1)
+    } else if (direction = 4) { 
+        sc("s", 1)
+    }
+    Send {space down}
+    Sleep 50
+    sc("q", 3)
+    Send {space up}
+    if (direction = 1) { ;; 4 direction
+        sc("w", 2)
+    } else if (direction = 2) { 
+        sc("a", 2)
+    } else if (direction = 3) { 
+        sc("d", 2)
+    } else if (direction = 4) { 
+        sc("s", 2)
+    }
+}
+sc(key,type) {
+    thatkey := format("sc{:x}", getKeySC(key))
+    if (type = 1) {
+        Send {%thatkey% down}
+    } else if (type = 2) {
+        Send {%thatkey% up}        
+    } else if (type = 3) {
+        send {%thatkey%}
+    }
+}
 
 AutoEatWeight:
     If (WE = "Food") {
@@ -161,6 +158,11 @@ AutoEatWeight:
                 } else If (ErrorLevel = 1) {
                     Return
                 }
+                ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+                If (ErrorLevel = 0) {
+                    Gosub, RecordUsername
+                    Gosub, Waitforcombat
+                }
                 ;; Search for combat here
             }
         }
@@ -173,7 +175,7 @@ AutoEatWeight:
         Loop = 10
         Loop, %Loop%
         {
-            ImageSearch, x, y, 90, 195, 675, 500, *10 %A_WorkingDir%/resource-main/x5.bmp
+            ImageSearch, x, y, 90, 195, 675, 500, *10 %A_WorkingDir%/resource-main/Common Use/x5.bmp
             If (ErrorLevel = 0) {
                 Sleep 40
                 Click, %x%, %y%, Down
@@ -183,7 +185,7 @@ AutoEatWeight:
                 xx:=xx+70
             } else If (ErrorLevel = 1) {
                 If (A_Index = 1) {
-                    ;;  Food ran out of inventory + Break
+                    MsgBox, Food Ranout ;;  Food ran out of inventory + Break
                     ExitApp
                 }
                 Break
@@ -216,12 +218,17 @@ AutoEatTread:
                 } else If (ErrorLevel = 1) {
                     Return
                 }
+                ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+                If (ErrorLevel = 0) {
+                    Gosub, RecordUsername
+                    Gosub, Waitforcombat
+                }
                 ;; Search for combat here
             }
         }
     }
     If (TE = "SlotEat") {
-        ;; Send Webhook After not found food in any slot
+        MsgBox, Food Ranout ;; Send Webhook After not found food in any slot
     } else if (TE = "Slot+Inventory") {
         sendsc("``") ;open inv
         MouseMove, 100, 480
@@ -230,7 +237,7 @@ AutoEatTread:
         Loop = 10
         Loop, %Loop%
         {
-            ImageSearch, x, y, 90, 195, 675, 500, *10 %A_WorkingDir%/resource-main/x5.bmp
+            ImageSearch, x, y, 90, 195, 675, 500, *10 %A_WorkingDir%/resource-main/Common Use/x5.bmp
             If (ErrorLevel = 0) {
                 Sleep 40
                 Click, %x%, %y%, Down
@@ -279,7 +286,7 @@ WaitTreadmill:
     {
         TaskSleep := A_TickCount - TimerSleep
         TaskTimer := A_TickCount - TreadmillTask
-        Tooltip, %TaskSleep% %TaskTimer%
+        Tooltip, %TaskSleep% %TaskTimer%, 650, 600
         If (TaskSleep > DefaultWait) {
             Break
         }
@@ -294,37 +301,52 @@ Return
 
 
 RecordUsername:
+    SetMouseDelay, 5
+    ;RECTYPE = "Record"
+    ;RECKEY = "{F12}"
+
     Send {o down}
     Sleep 1000
     Send {o up}
+
     If (RECTYPE = "Record") {
         Send %RECKEY%
     }
+
     PixelSearch,,, 565, 90, 566, 91, 0xFFFFFF, 10
     IF (ErrorLevel = 1) {
         Send {Tab}
     }
+    
     MouseMove, 765, 125
+    
     Loop, 10
     {
-        Click, WheelUp
+        Click, WheelUp 10
         Sleep 100
     }
-    Loop, 79
-    {
-        MouseMove, 0, 5, 1.7, r
-    }
+
+    Gosub, CheckName
+
     Click, 805, 160, Down
     Click, 805, 285, Up
-    MouseMove, 765, 125
-    Loop, 79
-    {
-        MouseMove, 0, 5, 1.7, r
-    }
+
+    Gosub, CheckName
+    
     If (RECTYPE = "Record") {
         Send %RECKEY%
     } else if (RECTYPE = "Shadow") {
         Send %RECKEY%
+    }
+Return
+CheckName:
+    vale = 108
+    Loop, 14
+    {
+        y:=vale+14
+        MouseMove, 765, %y%
+        vale:=vale+31
+        Sleep 150
     }
 Return
 WaitWeight:
@@ -339,7 +361,7 @@ WaitWeight:
     {
         TaskSleep := A_TickCount - TimerSleep
         TaskTimer := A_TickCount - WeightTask
-        Tooltip, %TaskSleep% %TaskTimer%
+        Tooltip, %TaskSleep% %TaskTimer%, 650, 600
         If (TaskSleep > DefaultWait) {
             Break
         }
@@ -408,45 +430,80 @@ AutoEatSP:
     Sleep 300
     Gosub, AutoEatSP
 Return
-Combat1:
-    ;; Half HP
+Waitforcombat:
+    ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+    If (ErrorLevel = 0) {
+        tooltip found combat
+        Loop,
+        {
+            Sleep 30
+            ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+            If (ErrorLevel = 1) {
+                Break
+            } else If (ErrorLevel = 0) {
+                PixelSearch,,, 40, 130, 40, 133, 0x3A3A3A, 40, Fast
+                If (ErrorLevel = 1) { ;; if stam enough
+                    Gosub, Combat1
+                } else if (ErrorLevel = 0) { ;; if low stam walk
+                    Loop, 5
+                    {
+                        Gosub, Combat2
+                    }   
+                }
+            }
+            ImageSearch,,, 670, 45, 755, 55, *5 resource-main\Common use\gripped.bmp
+            If (ErrorLevel = 0) {
+                Tooltip, Gripped, 650, 600
+                Return
+            }
+        } 
+    }
+    CombatTask := A_TickCount
     Loop,
     {
-        Random, oVar, 1, 2
-        If (oVar = 1) {
-            Random, oVar, 1, 2
-            If (oVar = 2) {
-                Random, oVar, 1, 2
-                siderunfunction(oVar)
-            } else if (oVar = 1) {
-                Random, oVar, 1, 2
-                runfunction(oVar)
-            } 
-        } else If (oVar = 2) {
-            Random, oVar, 1, 4
-            dash(oVar)
+        ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+        If (ErrorLevel = 0) {
+            Goto, Waitforcombat
         }
-        ; ImageSearch ;; for combat
-    } ;Until ErrorLevel = 1
+        tooltip, Combat Is Gone, 650, 600
+    } Until A_TickCount - CombatTask > 5000
+    tooltip, Combat Is Gone
+    MsgBox, Stopped
+Return
+Combat1:
+    Random, oVar, 1, 2
+    If (oVar = 1) {
+        Random, oVar, 1, 2
+        If (oVar = 2) {
+            Random, oVar, 1, 2
+            siderunfunction(oVar)
+        } else if (oVar = 1) {
+            Random, oVar, 1, 2
+            runfunction(oVar)
+        } 
+    } else If (oVar = 2) {
+        Random, oVar, 1, 4
+        dash(oVar)
+    }
 return
 Combat2:
-    ;; Half HP
-    Loop,
-    {
+    Random, oVar, 1, 2
+    If (oVar = 2) {
         Random, oVar, 1, 2
-        If (oVar = 1) {
-            Random, oVar, 1, 2
-            If (oVar = 2) {
-                Random, oVar, 1, 2
-                sidewalkfunction(oVar)
-            } else if (oVar = 1) {
-                Random, oVar, 1, 2
-                walkfunction(oVar)
-            } 
-        } else If (oVar = 2) {
-            Random, oVar, 1, 4
-            dash(oVar)
-        }
-        ; ImageSearch ;; for combat
-    } ;Until ErrorLevel = 1
+        sidewalkfunction(oVar)
+    } else if (oVar = 1) {
+        Random, oVar, 1, 2
+        walkfunction(oVar)
+    } 
+Return
+
+stacss:
+    Gui, Submit
+    Gui, Destroy
+    Goto, Skip4
+Return
+stasrv:
+    Gui, Submit
+    Gui, Destroy
+    Goto, Skip5
 Return

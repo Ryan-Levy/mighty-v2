@@ -2,8 +2,8 @@ CoordMode, Mouse, Window
 
 f1::
     SetMouseDelay, 5
-    RECTYPE = "Record"
-    RECKEY = "{F12}"
+    ;RECTYPE = "Record"
+    ;RECKEY = "{F12}"
 
     Send {o down}
     Sleep 1000
