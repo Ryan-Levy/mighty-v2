@@ -18,7 +18,7 @@ Loop,
     } 
     ImageSearch,,, 20, 120, 260, 140, *10 %A_WorkingDir%/resource-main/StrikePower/Stamina.bmp
     If (ErrorLevel = 0) {
-        if (can = true) {
+        if (can = true) or (can = "") {
             ;; Check for combat tool if equip or not
             Send {BackSpace}
             Sleep 100
