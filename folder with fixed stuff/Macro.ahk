@@ -312,7 +312,7 @@ Return
 StartSP:
     Gui, Submit
     Gui, Destroy
-
+    Goto, StartSPMac
 Return
 StartWeight:
     Gui, Submit
@@ -394,6 +394,7 @@ Return
 #Include,  %A_WorkingDir%/resource-main/function.ahk 
 #Include, %A_WorkingDir%/resource-main/Gui.ahk
 #Include, %A_WorkingDir%\resource-main\include\treadmill.ahk
+#Include, %A_WorkingDir%\resource-main\include\strikepower.ahk
 $l::ExitApp
 $k::Pause
 $j::Reload

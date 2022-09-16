@@ -430,6 +430,18 @@ AutoEatSP:
     Sleep 300
     Gosub, AutoEatSP
 Return
+
+WaitSp:
+    If (SPASR = "0") {
+        Sleep 9000
+        ;; loop check combat here
+    } else If (SPASR = "1") {
+        Sleep %SPSRV%
+        ;; loop check combat here
+    }
+    HUH:=A_TickCount
+Return
+
 Waitforcombat:
     ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
     If (ErrorLevel = 0) {
