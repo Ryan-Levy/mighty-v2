@@ -178,7 +178,7 @@ loadsave:
         GuiControl, Hide, %A_LoopField%
     }
     ;; load saved ddl
-    CheckBox:="SPASR,SPAAC,WASD,WASR,WAAC,WAAL,TASD,TASS,TASR,TAAC,TAAL"
+    CheckBox:="SPASR,SPAAC,SPAAL,WASD,WASR,WAAC,WAAL,TASD,TASS,TASR,TAAC,TAAL"
     Loop, Parse, CheckBox, `,
     {
         If (%A_LoopField% = "ERROR") {
@@ -196,20 +196,24 @@ loadsave:
     GuiControl,, WASR, %WASR%
     GuiControl,, WAAC, %WAAC%
     GuiControl,, WAAL, %WAAL%
+
+    GuiControl,, SPASR, %SPASR%
+    GuiControl,, SPAAC, %SPAAC%
+    GuiControl,, SPAAL, %SPAAL%
     ;; load option on settings.ini
-    GuiControl, Choose, TS, %TS%
-    GuiControl, Choose, TL, %TL%
-    GuiControl, Choose, TE, %TE%
-    GuiControl, Choose, TD, %TD%
-    GuiControl, Choose, TA, %TA%
-    GuiControl, Choose, WL, %WL%
-    GuiControl, Choose, WE, %WE%
-    GuiControl, Choose, WD, %WD%
-    GuiControl, Choose, WA, %WA%
-    GuiControl, Choose, SPA, %SPA%
-    GuiControl, Choose, SPR, %SPR%
-    GuiControl, Choose, SPE, %SPR%
-    GuiControl, Choose, SPD, %SPR%
+    GuiControl, ChooseString, TS, %TS%
+    GuiControl, ChooseString, TL, %TL%
+    GuiControl, ChooseString, TE, %TE%
+    GuiControl, ChooseString, TD, %TD%
+    GuiControl, ChooseString, TA, %TA%
+    GuiControl, ChooseString, WL, %WL%
+    GuiControl, ChooseString, WE, %WE%
+    GuiControl, ChooseString, WD, %WD%
+    GuiControl, ChooseString, WA, %WA%
+    GuiControl, ChooseString, SPA, %SPA%
+    GuiControl, ChooseString, SPR, %SPR%
+    GuiControl, ChooseString, SPE, %SPE%
+    GuiControl, ChooseString, SPD, %SPD%
     ;; show gui
     Gui, Show , h300 w700, Vivace's Macro
     WinSet, Region, 0-0 h300 w700 R15-15,Vivace's Macro
@@ -312,6 +316,14 @@ Return
 StartSP:
     Gui, Submit
     Gui, Destroy
+    IniWrite, %SPR%, settings.ini, StrikePower, SPR
+    IniWrite, %SPA%, settings.ini, StrikePower, SPA
+    IniWrite, %SPD%, settings.ini, StrikePower, SPD
+    IniWrite, %SPE%, settings.ini, StrikePower, SPE
+    IniWrite, %SPASR%, settings.ini, AdvStrikePower, SPASR
+    IniWrite, %SPAAC%, settings.ini, AdvStrikePower, SPAAC
+    IniWrite, %SPAAL%, settings.ini, AdvStrikePower, SPAAL
+    
     Goto, StartSPMac
 Return
 StartWeight:

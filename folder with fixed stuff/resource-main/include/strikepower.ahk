@@ -1,8 +1,8 @@
 StartSPMac:
+gosub, Check
 CoordMode, Tooltip, Window
 Tooltip, J Reload K Pause L Exit, 650, 550, 2
 ToolTip, Started StrikePower, 650, 600
-gosub, Check
 Send {BackSpace}{Click, Right}
 Sleep 100
 Send 1{Shift}
@@ -12,7 +12,6 @@ Loop,
 {
     Gosub, Check
     re:
-
     ImageSearch,,, 20, 120, 260, 140, *10 resource-main\Common Use\Stamina.bmp
     If (ErrorLevel = 0) {
         ;; Check for combat tool if equip or not
@@ -52,8 +51,8 @@ Loop,
         Click, Right
         ;; low stam timer check
         STAMCHECK:=A_TickCount-HUH
-        If (STAMCHECK > 120000) {
-            ;; been punching nonstop for over 2 minute can be inf stamina? ;; might be unequip combat
+        If (STAMCHECK > 240000) {
+            ;; been punching nonstop for over 4 minute can be inf stamina? ;; might be unequip combat
             
         }
     }
