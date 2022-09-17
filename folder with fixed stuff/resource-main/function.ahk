@@ -299,7 +299,9 @@ WaitTreadmill:
     }
 Return
 
-
+sendrhythm:
+    sendsc("r")
+Return
 RecordUsername:
     SetMouseDelay, 5
     ;RECTYPE = "Record"
@@ -374,7 +376,11 @@ WaitWeight:
     }
 Return
 AutoEatSP:
-    Slot:="2,3,4,5,6,7,8,9,0"
+    If (SPAWS = 1) or (eat = 2) {
+        Slot:="3,4,5,6,7,8,9,0"
+    } else If (SPAWS = 0) {
+        Slot:="2,3,4,5,6,7,8,9,0"
+    }
     Loop, Parse, Slot, `,
     {
         Send %A_LoopField%
@@ -389,13 +395,22 @@ AutoEatSP:
                     ImageSearch,,, 60, 520, 760, 550, resource-main\Common use\slotequip.bmp
                     If ErrorLevel = 1
                     {
-                        Goto, AutoEatSP
+                        HUH:=A_TickCount
+                        Gosub, AutoEatSP
                     }
                 } else If (ErrorLevel = 1) {
-                    Return
+                    Break
                 }
                 ;; Search for combat here
+                ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+                If (ErrorLevel = 0) {
+                    If (TAAC = 1) {
+                        Gosub, RecordUsername
+                    }
+                    Gosub, Waitforcombat
+                }
             }
+            Return
         }
     }
     If (SPE = "SlotEat") {
@@ -430,12 +445,22 @@ AutoEatSP:
     Sleep 300
     Gosub, AutoEatSP
 Return
-
+findc:
+    ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+    If (ErrorLevel = 0) {
+        If (TAAC = 1) {
+            Gosub, RecordUsername
+        }
+        Gosub, Waitforcombat
+    }
+Return
 WaitSp:
     If (SPASR = "0") {
+        SetTimer, findc, 9000
         Sleep 9000
         ;; loop check combat here
     } else If (SPASR = "1") {
+        SetTimer, findc, %SPSRV%
         Sleep %SPSRV%
         ;; loop check combat here
     }

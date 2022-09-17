@@ -147,9 +147,11 @@ IniRead, SPD, settings.ini, StrikePower, SPD
 IniRead, SPE, settings.ini, StrikePower, SPE
 
 ;; AdvStrikePower
+; SPAWS = Set Weave
 ; SPASR = Set Rest Delay
 ; SPAAC = Auto Clip
 ; SPAAL = Auto Leave
+IniRead, SPAWS, settings.ini, AdvStrikePower, SPAWS
 IniRead, SPASR, settings.ini, AdvStrikePower, SPASR
 IniRead, SPAAC, settings.ini, AdvStrikePower, SPAAC
 IniRead, SPAAL, settings.ini, AdvStrikePower, SPAAL
@@ -172,13 +174,13 @@ IniRead, SSAAL, settings.ini, AdvStrikeSpeed, SSAAL
 ;; finish load
 goto, run ;; run gui
 loadsave:
-    Hidethis:="SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,3button,2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL"
+    Hidethis:="SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button,2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL"
     Loop, Parse, Hidethis, `,
     {
         GuiControl, Hide, %A_LoopField%
     }
     ;; load saved ddl
-    CheckBox:="SPASR,SPAAC,SPAAL,WASD,WASR,WAAC,WAAL,TASD,TASS,TASR,TAAC,TAAL"
+    CheckBox:="SPASR,SPAAC,SPAAL,SPAWS,WASD,WASR,WAAC,WAAL,TASD,TASS,TASR,TAAC,TAAL"
     Loop, Parse, CheckBox, `,
     {
         If (%A_LoopField% = "ERROR") {
@@ -197,6 +199,7 @@ loadsave:
     GuiControl,, WAAC, %WAAC%
     GuiControl,, WAAL, %WAAL%
 
+    GuiControl,, SPAWS, %SPAWS%
     GuiControl,, SPASR, %SPASR%
     GuiControl,, SPAAC, %SPAAC%
     GuiControl,, SPAAL, %SPAAL%
@@ -320,6 +323,7 @@ StartSP:
     IniWrite, %SPA%, settings.ini, StrikePower, SPA
     IniWrite, %SPD%, settings.ini, StrikePower, SPD
     IniWrite, %SPE%, settings.ini, StrikePower, SPE
+    IniWrite, %SPAWS%, settings.ini, AdvStrikePower, SPAWS
     IniWrite, %SPASR%, settings.ini, AdvStrikePower, SPASR
     IniWrite, %SPAAC%, settings.ini, AdvStrikePower, SPAAC
     IniWrite, %SPAAL%, settings.ini, AdvStrikePower, SPAAL

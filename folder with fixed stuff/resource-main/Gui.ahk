@@ -81,6 +81,7 @@ run:
 
     Gui, Add, Text,xm+445 ym+50 vvvtext5 ,Advance Options
 
+    Gui, Add, Checkbox, vSPAWS ,Drain Move on 2
     Gui, Add, Checkbox, vSPASR ,Set Rest Delay
     Gui, Add, Checkbox, vSPAAC ,Auto Clip 
     Gui, Add, Checkbox, vSPAAL ,Auto Leave 
@@ -126,7 +127,7 @@ test2:
     }
 Return
 test3:
-    Showthis:="SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,3button"
+    Showthis:="SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button"
     Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL"
     Loop, Parse, Hidethis, `,
     {
