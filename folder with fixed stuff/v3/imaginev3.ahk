@@ -986,7 +986,6 @@ TreadEat:
                 } else (TAAL = 0) {
                     WinHttpReq.Send(DiscordSend("Auto Log is disabled`, macro has stopped",UserID)  
                 }
-                ExitApp
             } 
             ExitApp
         } else If (TE "Slot+Inventory") {
@@ -996,7 +995,27 @@ TreadEat:
     }
 Return
 SpEat:
-
+    If (SPAWS = 1) or (eat = 2) {
+        Slot:= "3,4,5,6,7,8,9,0"
+    } else If (SPAWS = 0) {
+        Slot:="2,3,4,5,6,7,8,9,0"
+    }
+    gosub, SendSlot
+    If (DidEat = false) {
+        If (SPE = "SlotEat") {
+            If (Webhook = true) {
+                WinHttpReq.Send(DiscordSend("You are out of food `"Slot`"",UserID)
+                If (SPAAL = 1) {
+                    Sleep 10000
+                    Process, Close, RobloxPlayerBeta.exe
+                    WinHttpReq.Send(DiscordSend("Logged successfully",UserID)  
+                } else (SPAAL = 0) {
+                    WinHttpReq.Send(DiscordSend("Auto Log is disabled`, macro has stopped",UserID)  
+                }
+            }
+            ExitApp
+        }
+    }
 Return
 
 WeightEat:
