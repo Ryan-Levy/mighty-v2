@@ -91,7 +91,6 @@ Loop,
         PixelSearch ,,, 40, 130, 60, 133, 0x3A3A3A, 40, Fast
         If (ErrorLevel = 0) {
             gosub, WaitSp
-            
         }
     } else If (SPA = "Medium") {
         PixelSearch ,,, 40, 130, 50, 133, 0x3A3A3A, 40, Fast
