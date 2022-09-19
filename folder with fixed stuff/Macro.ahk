@@ -61,14 +61,7 @@ if ((Webhook = "ERROR") or (UserID = "ERROR") or (UserID = "<@>") or (Webhook = 
             req := ComObjCreate("WinHttp.WinHttpRequest.5.1")
             req.Open("POST", Webhook, true)
             req.SetRequestHeader("Content-Type", "application/json")
-            firsttimechecking=
-            (
-                {
-                    "username": "i love vivace's macro",
-                    "content": "<@%UserID%> test"
-                }
-            )
-            req.Send(firsttimechecking)
+            req.send(DiscordSend("tessstwoord",UserID))
             Msgbox, 4, Vivace's Macro, Did you receive the ping?
             IfMsgBox no
             {
@@ -290,7 +283,7 @@ StartTread:
     Tooltip, 3
     If (TASS = 1) {
         Gui, Add, Text, y10,Start Delay Enabled:
-        Gui, Add, Edit, Number ym vTASS,
+        Gui, Add, Edit, Number ym vTASSV,
         Gui, Add, Button, ym gstacss, Done
         Gui, Show,, Vivace's Macro
         Return

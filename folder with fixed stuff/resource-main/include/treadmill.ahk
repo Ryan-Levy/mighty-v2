@@ -1,5 +1,6 @@
 
 TreadmillStart:
+MsgBox, %TASSV%
 CoordMode, Tooltip, Window
 Tooltip, J Reload K Pause L Exit, 650, 550, 2
 ToolTip, Started Treadmill, 650, 600
