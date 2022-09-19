@@ -1,6 +1,7 @@
 #Persistent
 #SingleInstance, force
 #NoEnv
+MsgBox, K is Pause L is Exit
 If (A_ScreenDPI != 96) { ;; checking scale and layout
     MsgBox,	16,Vivace's Macro, Your Scale `& layout settings need to be on 100`%
     ;; might add a option that ask if you want to use 100% scale
@@ -31,11 +32,14 @@ If !FileExist("settings.ini") {
     }
 }
 
+$k::Pause
+$l::ExitApp
+
 ;; main
 
 main:
 {
-    if (Webhook = true) { ;; making thing ready
+    if (Webhook1 = true) { ;; making thing ready
         req := ComObjCreate("WinHttp.WinHttpRequest.5.1")
         req.Open("POST", webhook, true)
         req.SetRequestHeader("Content-Type", "application/json")
@@ -201,9 +205,9 @@ StartTread:
                             Break
                         } else If (ErrorLevel = 1) {
                             If (A_Index = 5) {
-                                If (Webhook = true) {
+                                If (Webhook1 = true) {
                                     WinHttpReq.Send(DiscordSend("You are pushed away from treadmill",UserID))
-                                } else if (Webhook = false) {
+                                } else if (Webhook1 = false) {
                                     MsgBox, Not Found ;; Send Webhook and stop
                                 }
                             }
@@ -744,12 +748,13 @@ Return
 SubmitWebhook:
     Gui, Submit
     Gui, Destroy
-    Webhook = true
+    Webhook1 = true
     test:=GetUrlStatus(Webhook, 10)
-    if (test = "-1") {
+    if (test = 200) {
         WinHttpReq := ComObjCreate("WinHttp.WinHttpRequest.5.1")
         WinHttpReq.Open("POST", Webhook, true)
         WinHttpReq.SetRequestHeader("Content-Type", "application/json")
+        UserID:="<@" UserID ">"
         WinHttpReq.Send(DiscordSend("tessstwoord",UserID))
         Msgbox, 4, Vivace's Macro, Did you receive the ping?
         IfMsgBox no
@@ -758,12 +763,12 @@ SubmitWebhook:
             ExitApp
         } else {
             IniWrite, %Webhook%, settings.ini, Notifications, Webhook
-            IniWrite, <@%UserID%>, settings.ini, Notifications, UserID
+            IniWrite, %UserID%, settings.ini, Notifications, UserID
         }
     } else if (test = "") {
         MsgBox, 16, Vivace's Macro, Invalid link
         ExitApp
-    } else {
+    } else If (test = 0) {
         MsgBox, 16, Vivace's Macro, Timed out
         ExitApp
     }
@@ -771,7 +776,7 @@ SubmitWebhook:
 Return
 NotSubmitWebhook:
     Gui, Destroy
-    Webhook = false
+    Webhook1 = false
     goto, main
 Return
 CreateWebhookGui:
@@ -1017,7 +1022,7 @@ TreadEat:
     gosub, SendSlot
     If (DidEat = false) {
         If (TE = "SlotEat") {
-            If (Webhook = true) {
+            If (Webhook1 = true) {
                 WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
                 If (TAAL = 1) {
                     Sleep 10000
@@ -1043,7 +1048,7 @@ SpEat:
     gosub, SendSlot
     If (DidEat = false) {
         If (SPE = "SlotEat") {
-            If (Webhook = true) {
+            If (Webhook1 = true) {
                 WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
                 If (SPAAL = 1) {
                     Sleep 10000
@@ -1123,7 +1128,7 @@ InventoryDrag:
             xx:=xx+70
         } else If (ErrorLevel = 1) {
             If (A_Index = 1) {
-                If (Webhook = true) {
+                If (Webhook1 = true) {
                     WinHttpReq.Send(DiscordSend("You are out of food`, Inventory",UserID))
                 }
                 ExitApp
