@@ -202,8 +202,7 @@ StartTread:
                         } else If (ErrorLevel = 1) {
                             If (A_Index = 5) {
                                 If (Webhook = true) {
-                                    WinHttpReq.Send(DiscordSend("You are pushed away from treadmill",UserID)
-
+                                    WinHttpReq.Send(DiscordSend("You are pushed away from treadmill",UserID))
                                 } else if (Webhook = false) {
                                     MsgBox, Not Found ;; Send Webhook and stop
                                 }
@@ -855,7 +854,7 @@ git:
 Return
 test:
     Showthis:="Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL" 
-    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,3button"
+    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button"
     Loop,Parse,Showthis,`,
     {
         GuiControl, Show, %A_LoopField%
@@ -867,7 +866,7 @@ test:
 Return
 test2:
     Showthis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL"
-    Hidethis:="Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,3button"
+    Hidethis:="Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button"
     Loop, Parse, Hidethis, `,
     {
         GuiControl, Hide, %A_LoopField%
@@ -978,13 +977,13 @@ TreadEat:
     If (DidEat = false) {
         If (TE = "SlotEat") {
             If (Webhook = true) {
-                WinHttpReq.Send(DiscordSend("You are out of food `"Slot`"",UserID)
+                WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
                 If (TAAL = 1) {
                     Sleep 10000
                     Process, Close, RobloxPlayerBeta.exe
-                    WinHttpReq.Send(DiscordSend("Logged successfully",UserID)  
-                } else (TAAL = 0) {
-                    WinHttpReq.Send(DiscordSend("Auto Log is disabled`, macro has stopped",UserID)  
+                    WinHttpReq.Send(DiscordSend("Logged successfully",UserID))
+                } else If (TAAL = 0) {
+                    WinHttpReq.Send(DiscordSend("Auto Log is disabled`, macro has stopped",UserID)) 
                 }
             } 
             ExitApp
@@ -1004,13 +1003,13 @@ SpEat:
     If (DidEat = false) {
         If (SPE = "SlotEat") {
             If (Webhook = true) {
-                WinHttpReq.Send(DiscordSend("You are out of food `"Slot`"",UserID)
+                WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
                 If (SPAAL = 1) {
                     Sleep 10000
                     Process, Close, RobloxPlayerBeta.exe
-                    WinHttpReq.Send(DiscordSend("Logged successfully",UserID)  
-                } else (SPAAL = 0) {
-                    WinHttpReq.Send(DiscordSend("Auto Log is disabled`, macro has stopped",UserID)  
+                    WinHttpReq.Send(DiscordSend("Logged successfully",UserID))
+                } else If (SPAAL = 0) {
+                    WinHttpReq.Send(DiscordSend("Auto Log is disabled`, macro has stopped",UserID))
                 }
             }
             ExitApp
@@ -1084,7 +1083,7 @@ InventoryDrag:
         } else If (ErrorLevel = 1) {
             If (A_Index = 1) {
                 If (Webhook = true) {
-                    WinHttpReq.Send(DiscordSend("You are out of food `"Inventory`"",UserID)
+                    WinHttpReq.Send(DiscordSend("You are out of food`, Inventory",UserID))
                 }
                 ExitApp
             }
@@ -1097,4 +1096,143 @@ InventoryDrag:
 Return
 RMT:
     tooltip
+Return
+RecordUsername:
+    SetMouseDelay, 5
+    ;RECTYPE = "Record"
+    ;RECKEY = "{F12}"
+
+    Send {o down}
+    Sleep 1000
+    Send {o up}
+
+    If (RECTYPE = "Record") {
+        Send %RECKEY%
+    }
+
+    PixelSearch,,, 565, 90, 566, 91, 0xFFFFFF, 10
+    IF (ErrorLevel = 1) {
+        Send {Tab}
+    }
+    
+    MouseMove, 765, 125
+    
+    Loop, 10
+    {
+        Click, WheelUp 10
+        Sleep 100
+    }
+
+    Gosub, CheckName
+
+    Click, 805, 160, Down
+    Click, 805, 285, Up
+
+    Gosub, CheckName
+    
+    If (RECTYPE = "Record") {
+        Send %RECKEY%
+    } else if (RECTYPE = "Shadow") {
+        Send %RECKEY%
+    }
+Return
+CheckName:
+    vale = 108
+    Loop, 14
+    {
+        y:=vale+14
+        MouseMove, 765, %y%
+        vale:=vale+31
+        Sleep 150
+    }
+Return
+Waitforcombat:
+    ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+    If (ErrorLevel = 0) {
+        tooltip found combat
+        Loop,
+        {
+            Sleep 30
+            ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+            If (ErrorLevel = 1) {
+                Break
+            } else If (ErrorLevel = 0) {
+                PixelSearch,,, 40, 130, 40, 133, 0x3A3A3A, 40, Fast
+                If (ErrorLevel = 1) { ;; if stam enough
+                    Gosub, Combat1
+                } else if (ErrorLevel = 0) { ;; if low stam walk
+                    Loop, 5
+                    {
+                        Gosub, Combat2
+                    }   
+                }
+            }
+            ImageSearch,,, 670, 45, 755, 55, *5 resource-main\Common use\gripped.bmp
+            If (ErrorLevel = 0) {
+                Tooltip, Gripped, 650, 600
+                Return
+            }
+        } 
+    }
+    CombatTask := A_TickCount
+    Loop,
+    {
+        ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+        If (ErrorLevel = 0) {
+            Goto, Waitforcombat
+        }
+        tooltip, Combat Is Gone, 650, 600
+    } Until A_TickCount - CombatTask > 5000
+    tooltip, Combat Is Gone
+    MsgBox, Stopped
+Return
+Combat1:
+    Random, oVar, 1, 2
+    If (oVar = 1) {
+        Random, oVar, 1, 2
+        If (oVar = 2) {
+            Random, oVar, 1, 2
+            siderunfunction(oVar)
+        } else if (oVar = 1) {
+            Random, oVar, 1, 2
+            runfunction(oVar)
+        } 
+    } else If (oVar = 2) {
+        Random, oVar, 1, 4
+        dash(oVar)
+    }
+return
+Combat2:
+    Random, oVar, 1, 2
+    If (oVar = 2) {
+        Random, oVar, 1, 2
+        sidewalkfunction(oVar)
+    } else if (oVar = 1) {
+        Random, oVar, 1, 2
+        walkfunction(oVar)
+    } 
+Return
+sendrhythm:
+    sendsc("r")
+Return
+WaitSp:
+    If (SPASR = "0") {
+        SetTimer, findc, 9000
+        Sleep 9000
+        ;; loop check combat here
+    } else If (SPASR = "1") {
+        SetTimer, findc, %SPSRV%
+        Sleep %SPSRV%
+        ;; loop check combat here
+    }
+    HUH:=A_TickCount
+Return  
+findc:
+    ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
+    If (ErrorLevel = 0) {
+        If (TAAC = 1) {
+            Gosub, RecordUsername
+        }
+        Gosub, Waitforcombat
+    }
 Return
