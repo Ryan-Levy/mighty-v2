@@ -44,13 +44,13 @@ main:
     gosub, LoadData
     ;; load gui
     gosub, LoadMainGui
-    Hidethis:="SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button,2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL"
+    Hidethis:="SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button,2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,vvvtext1,vvvtext2,vvvtext3,vvvtext4,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button"
     Loop, Parse, Hidethis, `,
     {
         GuiControl, Hide, %A_LoopField%
     }
     ;; load saved ddl
-    CheckBox:="SPASR,SPAAC,SPAAL,SPAWS,WASD,WASR,WAAC,WAAL,TASD,TASS,TASR,TAAC,TAAL"
+    CheckBox:="SPASR,SPAAC,SPAAL,SPAWS,WASD,WASR,WAAC,WAAL,TASD,TASS,TASR,TAAC,TAAL,SSALT,SSAAC,SSAAL"
     Loop, Parse, CheckBox, `,
     {
         If (%A_LoopField% = "ERROR") {
@@ -158,7 +158,7 @@ StartTread:
                 } Until A_TickCount - UpTreadmill > 1500
             }
         }
-        ImageSearch,,, 20, 120, 260, 140, *10 %A_WorkingDir%\resource-main\treadmill\Stamina.bmp
+        ImageSearch,,, 20, 120, 260, 140, *10 bin\Stamina.bmp
         If (ErrorLevel = 0) { ;; found stamina bar
             Tooltip, Found Stam, 650, 600
             Sleep 100
@@ -193,7 +193,7 @@ StartTread:
                     {
                         ToolTip, Search For %A_LoopField%, 650, 600
                         Sleep 100
-                        ImageSearch,,, 390, 240, 430, 390, *Trans0x5A5A5A *13 resource-main\treadmill\level%A_LoopField%.bmp
+                        ImageSearch,,, 390, 240, 430, 390, *Trans0x5A5A5A *13 bin\level%A_LoopField%.bmp
                         If (ErrorLevel = 0) {
                             y:=y(A_LoopField)
                             Tooltip, Choose %A_LoopField%, 650, 600
@@ -249,7 +249,7 @@ StartTread:
                 TaskTimer := A_TickCount - TreadmillTask
                 Loop, Parse, button, `,
                 {
-                    ImageSearch,,, 200, 240, 600, 300, *50 %A_WorkingDir%\resource-main\treadmill\%A_LoopField%.bmp
+                    ImageSearch,,, 200, 240, 600, 300, *50 bin\%A_LoopField%.bmp
                     If (ErrorLevel = 0) {
                         Tooltip, Send %A_LoopField%, 650, 600
                         keytread:=A_LoopField
@@ -283,7 +283,7 @@ StartTread:
                 }
             }
         }
-        ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+        ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
         If (ErrorLevel = 0) {
             If (TAAC = 1) {
                 Gosub, RecordUsername
@@ -369,7 +369,7 @@ StartSP:
     {
         Gosub, Check
         re:
-        ImageSearch,,, 20, 120, 260, 140, *10 resource-main\Common Use\Stamina.bmp
+        ImageSearch,,, 20, 120, 260, 140, *10 bin\Common Use\Stamina.bmp
         If (ErrorLevel = 0) {
             ;; Check for combat tool if equip or not
             If (SPAWS = 1) {
@@ -388,7 +388,7 @@ StartSP:
                         Break
                     }
                     Click
-                    ImageSearch,,, 20, 120, 260, 140, *10 resource-main\Common Use\Stamina.bmp
+                    ImageSearch,,, 20, 120, 260, 140, *10 bin\Common Use\Stamina.bmp
                     Sleep 50
                 } Until (ErrorLevel = 1)
                 Send 1
@@ -411,7 +411,7 @@ StartSP:
                     If (TimerCheck > 60000) {
                         ;; running too long inf stam?
                     }
-                    ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+                    ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
                     If (ErrorLevel = 0) {
                         If (TAAC = 1) {
                             Gosub, RecordUsername
@@ -427,7 +427,7 @@ StartSP:
                         HUH:=A_TickCount    
                         Break
                     }
-                    ImageSearch,,, 20, 120, 260, 140, *10 resource-main\Common Use\Stamina.bmp
+                    ImageSearch,,, 20, 120, 260, 140, *10 bin\Common Use\Stamina.bmp
                     if (ErrorLevel = 0) {
                         goto, re
                     }
@@ -473,11 +473,11 @@ StartSP:
                 Send 1
                 Loop, ;; have to wait until stamina is full incase something stopped 
                 {
-                    ImageSearch,,, 20, 120, 260, 140, *10 resource-main\Common Use\Stamina.bmp
+                    ImageSearch,,, 20, 120, 260, 140, *10 bin\Common Use\Stamina.bmp
                     If (ErrorLevel = 0) {
                         Break
                     }
-                    ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+                    ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
                     If (ErrorLevel = 0) {
                         If (TAAC = 1) {
                             Gosub, RecordUsername
@@ -491,7 +491,7 @@ StartSP:
         }
 
         ;; combat 
-        ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+        ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
         If (ErrorLevel = 0) {
             If (TAAC = 1) {
                 Gosub, RecordUsername
@@ -502,6 +502,10 @@ StartSP:
 
 Return
 StartWeight:
+MsgBox, Doesn't Work
+Return
+StartSS:
+MsgBox, Doesn't Work
 Return
 ;; function
 
@@ -645,7 +649,7 @@ LoadMainGui:
     Gui, Add, Picture, gtest w32 h32 x10 y30, bin/tab/Treadmill.png
     Gui, Add, Picture, gtest2 w32 h32 x10 y75, bin/tab/Weight.png
     Gui, Add, Picture, gtest3 w32 h32 x10 y110, bin/tab/sp.png
-    Gui, Add, Picture, gtest2 w32 h32 x10 y155, bin/tab/ss.png
+    Gui, Add, Picture, gtest4 w32 h32 x10 y155, bin/tab/ss.png
 
     Gui, Add, GroupBox,  x50 y30 w630 h250 vTreadmillTab, Treadmill's Option
 
@@ -718,7 +722,24 @@ LoadMainGui:
     Gui, Add, Checkbox, vSPAAC ,Auto Clip 
     Gui, Add, Checkbox, vSPAAL ,Auto Leave 
 
-    Gui, Add, Button,xm+321 ym+240 v3button gStartSP ,Done ;; start button
+    ;; strike speed
+    Gui, Add, GroupBox,  x50 y30 w630 h250 vSSTab, Strike Speed's Option
+    Gui, Add, Text, xm+55 ym+50 vvvvtext1,Training Type
+    Gui, Add, DropDownList, Choose1 vSST,Stand in place ;; no saved option cuz it has only 1
+
+    Gui, Add, Text, xm+250 ym+50 vvvvtext3 ,Duration Options?
+    Gui, Add, DropDownList,vSSD ,Macro Indefinitely|Fatigue estimate
+    Gui, Add, Text, vvvvtext4 ,Auto Eat Options
+    Gui, Add, DropDownList, vSSE ,None|Slot Eat|Slot+Inventory 
+
+    Gui, Add, Text,xm+445 ym+50 vvvvtext2 ,Advance Options
+    Gui, Add, Checkbox, vSSALT ,Log Training
+    Gui, Add, Checkbox, vSSAAC ,Auto Clip 
+    Gui, Add, Checkbox, vSSAAL ,Auto Leave 
+    Gui, Add, Button,xm+321 ym+240 v4button gStartSS ,Done ;; start button
+
+
+    ;; vvvvtext1,vvvvtext2,vvvvtext3,vvvvtext4,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button
 Return
 SubmitWebhook:
     Gui, Submit
@@ -854,7 +875,7 @@ git:
 Return
 test:
     Showthis:="Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL" 
-    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button"
+    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button,vvvtext1,vvvtext2,vvvtext3,vvvtext4,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button"
     Loop,Parse,Showthis,`,
     {
         GuiControl, Show, %A_LoopField%
@@ -866,7 +887,7 @@ test:
 Return
 test2:
     Showthis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL"
-    Hidethis:="Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button"
+    Hidethis:="Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button,vvvtext1,vvvtext2,vvvtext3,vvvtext4,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button"
     Loop, Parse, Hidethis, `,
     {
         GuiControl, Hide, %A_LoopField%
@@ -878,7 +899,7 @@ test2:
 Return
 test3:
     Showthis:="SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button"
-    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL"
+    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,vvvtext1,vvvtext2,vvvtext3,vvvtext4,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button"
     Loop, Parse, Hidethis, `,
     {
         GuiControl, Hide, %A_LoopField%
@@ -888,6 +909,17 @@ test3:
         GuiControl, Show, %A_LoopField%
     }
 Return
+test4:
+    Showthis:="vvvtext1,vvvtext2,vvvtext3,vvvtext4,SStab,SST,SSD,SSE,SSALT,SSAAC,SSAAL,4button"
+    Hidethis:="2Button,WeightTab,vtext1,vtext2,vtext3,vtext4,vtext5,WL,WE,WD,WA,WASD,WASR,WAAC,WAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,Button,TreadmillTab,TS,TL,TE,TD,TA,text1,text2,text3,text4,text5,text6,TASD,TASS,TASR,TAAC,TAAL,SPTab,vvtext1,vvtext2,vvtext3,vvtext4,vvtext5,SPA,SPR,SPE,SPD,SPASR,SPAAC,SPAAL,SPAWS,3button"
+    Loop, Parse, Hidethis, `,
+    {
+        GuiControl, Hide, %A_LoopField%
+    }
+    Loop, Parse, Showthis, `,
+    {
+        GuiControl, Show, %A_LoopField%
+    }
 SetOptions:
     GuiControl,, TASD, %TASD%
     GuiControl,, TASS, %TASS%
@@ -904,6 +936,10 @@ SetOptions:
     GuiControl,, SPASR, %SPASR%
     GuiControl,, SPAAC, %SPAAC%
     GuiControl,, SPAAL, %SPAAL%
+
+    GuiControl,, SSALT, %SSALT%
+    GuiControl,, SSAAC, %SSAAC%
+    GuiControl,, SSAAL, %SSAAL%
     ;; load option on settings.ini
     GuiControl, ChooseString, TS, %TS%
     GuiControl, ChooseString, TL, %TL%
@@ -918,6 +954,11 @@ SetOptions:
     GuiControl, ChooseString, SPR, %SPR%
     GuiControl, ChooseString, SPE, %SPE%
     GuiControl, ChooseString, SPD, %SPD%
+    
+    GuiControl, ChooseString, SST, %SST%
+    GuiControl, ChooseString, SSE, %SSE%
+    GuiControl, ChooseString, SSD, %SSD%
+
 Return
 RecordStuff:
     If (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
@@ -1033,7 +1074,7 @@ SendSlot:
     Loop, Parse, Slot, `,
     {
         Send %A_LoopField%
-        ImageSearch,,, 60, 520, 760, 550, resource-main\Common use\slotequip.bmp
+        ImageSearch,,, 60, 520, 760, 550, bin\Common use\slotequip.bmp
         If (ErrorLevel = 0) {
             gosub, eat
             DidEat = true
@@ -1147,13 +1188,13 @@ CheckName:
     }
 Return
 Waitforcombat:
-    ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+    ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
     If (ErrorLevel = 0) {
         tooltip found combat
         Loop,
         {
             Sleep 30
-            ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+            ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
             If (ErrorLevel = 1) {
                 Break
             } else If (ErrorLevel = 0) {
@@ -1167,7 +1208,7 @@ Waitforcombat:
                     }   
                 }
             }
-            ImageSearch,,, 670, 45, 755, 55, *5 resource-main\Common use\gripped.bmp
+            ImageSearch,,, 670, 45, 755, 55, *5 bin\Common use\gripped.bmp
             If (ErrorLevel = 0) {
                 Tooltip, Gripped, 650, 600
                 Return
@@ -1177,7 +1218,7 @@ Waitforcombat:
     CombatTask := A_TickCount
     Loop,
     {
-        ImageSearch,,, 20, 85, 170, 110, *20 resource-main\Common use\combat.bmp
+        ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
         If (ErrorLevel = 0) {
             Goto, Waitforcombat
         }

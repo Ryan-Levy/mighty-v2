@@ -151,8 +151,10 @@ IniRead, SPAAL, settings.ini, AdvStrikePower, SPAAL
 
 
 ;;STRIKESPEED
+; SST = Training Type
 ; SSE = Eat options
 ; SSD = Duration
+iniRead, SST, settings.ini, StrikeSpeed, SST
 IniRead, SSE, settings.ini, StrikeSpeed, SSE
 IniRead, SSD, settings.ini, StrikeSpeed, SSD
 
