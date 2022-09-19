@@ -70,7 +70,7 @@ Return
 StartTread:
     Gui, Submit
     Gui, Destroy
-    If (TS = "" or TL = "" or TE = "" or TD = "" or TA = "" or TASD = "" or TASS = "" or = ""TASR = "" or TAAC = "" or TAAL = "") {
+    If (TS = "" or TL = "" or TE = "" or TD = "" or TA = "") {
         MsgBox,,Vivace's Macro,You have incomplete information.
         ExitApp
     }
@@ -306,7 +306,9 @@ Return
 StartSP:
     Gui, Submit
     Gui, Destroy
-    If (SPR = "" or SPA = "" or SPD = "" or SPE = "" or SPAWS = "" or SPASR = "" or SPAAC = "" or SPAAL = "") {
+    MsgBox, % SPR SPA SPD SPE
+    If ((SPR = "") or (SPA = "") or (SPD = "") or (SPE = "")) 
+    {
         msgbox,,Vivace's Macro,You have incomplete information.
         ExitApp
     }
@@ -334,6 +336,7 @@ StartSP:
         IniRead, KeyCombo, settings.ini, Record, RECKEY
         IniRead, List, settings.ini, Record, RECTYPE
         if (KeyCombo = "" or List = "" or KeyCombo = "ERROR" or List = "ERROR") {
+            call = true
             Gui, Add, Text, y10,Record Key:
             Gui, Add, DDL, +Theme ym vKeyCombo , Win+Alt+G|F8|F12
             Gui, Add, Button, ym gRecorderr, Done
@@ -347,7 +350,10 @@ StartSP:
     {
         Gui, Submit
         Gui, Destroy
-        Gosub, RecordStuff
+        if (call = true) {
+            Gosub, RecordStuff
+        }
+
     }
     If (SPSR = 1) {
         Gui, Add, Text, y10,Rest Delay Enabled:
@@ -473,6 +479,8 @@ StartSP:
             PixelSearch,,, 55, 145, 56, 145, 0x3A3A3A, 40, Fast ; Hungry
             If (ErrorLevel = 0) {
                 Send {Shift}{BackSpace}
+                Sleep 200
+                MsgBox, Eating
                 Gosub, SpEat
                 Send 1
                 Loop, ;; have to wait until stamina is full incase something stopped 
@@ -725,7 +733,7 @@ LoadMainGui:
     Gui, Add, Checkbox, vSPASR ,Set Rest Delay
     Gui, Add, Checkbox, vSPAAC ,Auto Clip 
     Gui, Add, Checkbox, vSPAAL ,Auto Leave 
-
+    Gui, Add, Button,xm+321 ym+240 v3button gStartSP ,Done
     ;; strike speed
     Gui, Add, GroupBox,  x50 y30 w630 h250 vSSTab, Strike Speed's Option
     Gui, Add, Text, xm+55 ym+50 vvvvtext1,Training Type
@@ -1020,7 +1028,7 @@ Return
 TreadEat:
     Slot:="1,2,3,4,5,6,7,8,9,0"
     gosub, SendSlot
-    If (DidEat = false) {
+    If (ErrorLevel = 1) {
         If (TE = "SlotEat") {
             If (Webhook1 = true) {
                 WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
@@ -1033,20 +1041,22 @@ TreadEat:
                 }
             } 
             ExitApp
-        } else If (TE "Slot+Inventory") {
-            Gosub, InventoryDrag
+        } else If (TE = "Slot+Inventory") {
+            Gosub, InventoryDraggg
             Gosub, TreadEat
         }
     }
 Return
 SpEat:
+    Send {BackSpace}
+    Sleep 100
     If (SPAWS = 1) or (eat = 2) {
         Slot:= "3,4,5,6,7,8,9,0"
     } else If (SPAWS = 0) {
         Slot:="2,3,4,5,6,7,8,9,0"
     }
-    gosub, SendSlot
-    If (DidEat = false) {
+    gosub, SendSlot 
+    If (ErrorLevel = 1) {
         If (SPE = "SlotEat") {
             If (Webhook1 = true) {
                 WinHttpReq.Send(DiscordSend("You are out of food`, Slot",UserID))
@@ -1059,8 +1069,13 @@ SpEat:
                 }
             }
             ExitApp
+        } else If (SPE = "Slot+Inventory") {
+            Gosub, InventoryDraggg
+            Gosub, SpEat
         }
     }
+    
+
 Return
 
 WeightEat:
@@ -1078,16 +1093,16 @@ Return
 SendSlot:
     Loop, Parse, Slot, `,
     {
+        Tooltip, %A_LoopField%
         Send %A_LoopField%
+        Sleep 150
         ImageSearch,,, 60, 520, 760, 550, bin\Common use\slotequip.bmp
         If (ErrorLevel = 0) {
-            gosub, eat
-            DidEat = true
+            gosub, Eat
             Break
-        } else {
-            DidEat = false
         }
     }
+
 Return
 
 Eat:
@@ -1110,8 +1125,9 @@ Eat:
         }
     }
 Return
-InventoryDrag:
-    sendsc("``") ;open inv
+InventoryDraggg:
+    Sleep 1000
+    sc("``", 1) sc("``", 2)  ;open inv
     MouseMove, 100, 480
     Sleep 600
     xx=95
@@ -1137,7 +1153,7 @@ InventoryDrag:
         }   
     }
     MouseMove, 100, 480
-    sendsc("``") 
+    sc("``", 1)sc("``", 2) 
     Sleep 300
 Return
 RMT:
@@ -1195,6 +1211,9 @@ Return
 Waitforcombat:
     ImageSearch,,, 20, 85, 170, 110, *20 bin\Common use\combat.bmp
     If (ErrorLevel = 0) {
+        If (Webhook1 = true) {
+            WinHttpReq.Send(DiscordSend("You are attacked`, Start Emergency Function",UserID))
+        }
         tooltip found combat
         Loop,
         {
@@ -1230,6 +1249,9 @@ Waitforcombat:
         tooltip, Combat Is Gone, 650, 600
     } Until A_TickCount - CombatTask > 5000
     tooltip, Combat Is Gone
+    If (Webhook1 = true) {
+        WinHttpReq.Send(DiscordSend("Combat is gone",UserID))
+    }
     MsgBox, Stopped
 Return
 Combat1:
@@ -1282,3 +1304,4 @@ findc:
         Gosub, Waitforcombat
     }
 Return
+
